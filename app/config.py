@@ -2,7 +2,7 @@
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
-    db_host: str = "192.168.1.121"
+    db_host: str = "estrategia.dnsdojo.com"
     db_port: str = "5432"
     db_name: str = "mibasededatos"
     db_user: str = "miusuario"
