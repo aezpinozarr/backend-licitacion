@@ -6,8 +6,6 @@ from app.config import settings
 # Cadena de conexión a PostgreSQL
 DATABASE_URL = f"postgresql://{settings.db_user}:{settings.db_password}@{settings.db_host}:{settings.db_port}/{settings.db_name}"
 
-print("🔍 DATABASE_URL:", DATABASE_URL)  # 👈 agrega esto
-
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

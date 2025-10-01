@@ -237,3 +237,25 @@ class EntregableOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+# ==========================
+# Schemas para Entes
+# ==========================
+
+class EnteBase(BaseModel):
+    descripcion: str
+    siglas: str
+    clasificacion: str
+    id_ente_tipo: str
+    activo: Optional[bool] = True
+
+class EnteCreate(EnteBase):
+    pass
+
+class EnteUpdate(EnteBase):
+    pass
+
+class EnteOut(EnteBase):
+    id: str
+    ente_tipo_descripcion: str

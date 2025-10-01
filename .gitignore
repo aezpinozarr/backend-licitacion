@@ -30,3 +30,5 @@ __pycache__/
 
 # Archivos de despliegue o temporales
 .DS_Store
+
+app/backend/
