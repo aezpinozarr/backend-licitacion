@@ -7,10 +7,10 @@ from app.config import settings
 app = FastAPI()
 
 # Configuración de CORS
-origins = settings.cors_origins.split(",")
+origins = settings.cors_origins.split(",") if settings.cors_origins else ["*"]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=origins if origins != ["*"] else ["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
