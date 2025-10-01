@@ -259,3 +259,11 @@ class EnteUpdate(EnteBase):
 class EnteOut(EnteBase):
     id: str
     ente_tipo_descripcion: str
+
+# ==========================
+# Schemas para Tipo de Ente
+# ==========================
+
+class EnteTipoOut(BaseModel):
+    id: str
+    descripcion: str
