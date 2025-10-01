@@ -17,9 +17,10 @@ def get_entes(p_id: str = "-99", p_descripcion: str = "-99", db: Session = Depen
     try:
         result = db.execute(
             text("SELECT * FROM catalogos.sp_cat_ente(:p_id, :p_descripcion)"),
-            {"p_id": p_id, "p_descripcion": p_descripcion}
+            {"p_id": p_id, "p_descripcion": p_descripcion},
         )
-        return [dict(row) for row in result]
+        # Row en SQLAlchemy 2.x se accede con ._mapping
+        return [dict(row._mapping) for row in result]
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -40,12 +41,15 @@ def create_ente(ente: schemas.EnteCreate, db: Session = Depends(get_db)):
                 "descripcion": ente.descripcion,
                 "siglas": ente.siglas,
                 "clasificacion": ente.clasificacion,
-                "id_ente_tipo": ente.id_ente_tipo,
-                "activo": ente.activo
-            }
+                "id_ente_tipo": ente.id_ente_tipo,  # debe coincidir con valores tipo "DEPE", "ODES"
+                "activo": ente.activo,
+            },
         )
-        return result.scalar()
+        new_id = result.scalar()
+        db.commit()  # ✅ IMPORTANTE
+        return new_id
     except Exception as e:
+        db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -66,15 +70,18 @@ def update_ente(ente_id: int, ente: schemas.EnteUpdate, db: Session = Depends(ge
                 "siglas": ente.siglas,
                 "clasificacion": ente.clasificacion,
                 "id_ente_tipo": ente.id_ente_tipo,
-                "activo": ente.activo
-            }
+                "activo": ente.activo,
+            },
         )
-        return result.scalar()
+        out = result.scalar()
+        db.commit()  # ✅ CONFIRMAR
+        return out
     except Exception as e:
+        db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
 
 
-# DELETE → Eliminar ente (desactivar)
+# DELETE → Eliminar (desactivar)
 @router.delete("/{ente_id}", response_model=int)
 def delete_ente(ente_id: int, db: Session = Depends(get_db)):
     try:
@@ -84,8 +91,11 @@ def delete_ente(ente_id: int, db: Session = Depends(get_db)):
                     :accion, :p_id, NULL, NULL, NULL, NULL, NULL
                 ) AS result
             """),
-            {"accion": "ELIMINAR", "p_id": ente_id}
+            {"accion": "ELIMINAR", "p_id": ente_id},
         )
-        return result.scalar()
+        out = result.scalar()
+        db.commit()  # ✅ CONFIRMAR
+        return out
     except Exception as e:
+        db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
