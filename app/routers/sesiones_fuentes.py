@@ -63,24 +63,23 @@ def delete_fuente_from_sesion(id_calendario_sesiones: int, id_fuente_financiamie
 
 
 # ===========================
-# Listar fuentes por sesión (SELECT a tablas)
+# Listar fuentes por sesión (Stored Procedure)
 # ===========================
 @router.get("/{id_calendario_sesiones}", response_model=List[schemas.SesionFuenteOut])
-def list_fuentes_by_sesion(id_calendario_sesiones: int, db: Session = Depends(get_db)):
+def list_fuentes_by_sesion(
+    id_calendario_sesiones: int,
+    db: Session = Depends(get_db)
+):
     try:
         result = db.execute(
             text("""
-                SELECT 
-                    sf.id_calendario_sesiones,
-                    sf.id_fuente_financiamiento,
-                    f.descripcion AS fuente_descripcion
-                FROM procesos.calendario_sesiones_fuentes_financiamiento sf
-                JOIN catalogos.cat_fuente_financiamiento f
-                  ON sf.id_fuente_financiamiento = f.id
-                WHERE sf.id_calendario_sesiones = :id_calendario_sesiones
-                ORDER BY sf.id_fuente_financiamiento
+                SELECT * 
+                FROM procesos.sp_calendario_sesiones_fuentes_financiamiento(:p_id_calendario_sesiones, :p_id_fuente_financiamiento)
             """),
-            {"id_calendario_sesiones": id_calendario_sesiones}
+            {
+                "p_id_calendario_sesiones": id_calendario_sesiones,
+                "p_id_fuente_financiamiento": -99
+            }
         ).mappings().all()
 
         return result

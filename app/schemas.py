@@ -174,9 +174,10 @@ class SesionFuenteCreate(SesionFuenteBase):
     pass
 
 
-class SesionFuenteOut(SesionFuenteBase):
-    id: int
-    fuente_descripcion: Optional[str] = None
+class SesionFuenteOut(BaseModel):
+    id_calendario_sesiones: int
+    id_fuente_financiamiento: int
+    fuente_descripcion: str
 
 # ===========================
 # Fuentes de financiamiento
@@ -289,3 +290,29 @@ class ServidorPublicoOut(ServidorPublicoBase):
 
     class Config:
         orm_mode = True
+
+
+# ==========================
+# Calendario Sesiones Pivot
+# ==========================
+
+
+class SesionFechaPivotOut(BaseModel):
+    id: int
+    id_calendario_sesiones: int
+    id_ente: str
+    descripcion: str
+    licitacion_clasificacion: str
+    licitacion_tipo: str
+    ENE: Optional[str] = None
+    FEB: Optional[str] = None
+    MAR: Optional[str] = None
+    ABR: Optional[str] = None
+    MAY: Optional[str] = None
+    JUN: Optional[str] = None
+    JUL: Optional[str] = None
+    AGO: Optional[str] = None
+    SEP: Optional[str] = None
+    OCT: Optional[str] = None
+    NOV: Optional[str] = None
+    DIC: Optional[str] = None
