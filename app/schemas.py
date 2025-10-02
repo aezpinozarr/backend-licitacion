@@ -267,3 +267,25 @@ class EnteOut(EnteBase):
 class EnteTipoOut(BaseModel):
     id: str
     descripcion: str
+
+
+# ==========================
+# Schemas para Servidores Públicos
+# ==========================
+
+class ServidorPublicoBase(BaseModel):
+    nombre: str
+    cargo: str
+    activo: bool = True
+
+class ServidorPublicoCreate(ServidorPublicoBase):
+    pass
+
+class ServidorPublicoUpdate(ServidorPublicoBase):
+    id: int
+
+class ServidorPublicoOut(ServidorPublicoBase):
+    id: int
+
+    class Config:
+        orm_mode = True

@@ -1,7 +1,7 @@
 # app/main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import clientes, catalogos, sesiones, sesiones_fuentes, sesiones_fechas, sesiones_entregables, entes, ente_tipo
+from app.routers import clientes, catalogos, sesiones, sesiones_fuentes, sesiones_fechas, sesiones_entregables, entes, ente_tipo, servidores_publicos, servidor_publico
 from app.config import settings
 
 app = FastAPI()
@@ -25,3 +25,5 @@ app.include_router(sesiones_fechas.router)
 app.include_router(sesiones_entregables.router)
 app.include_router(entes.router)
 app.include_router(ente_tipo.router)
+app.include_router(servidores_publicos.router)
+app.include_router(servidor_publico.router)
