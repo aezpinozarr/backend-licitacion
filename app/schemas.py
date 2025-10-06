@@ -295,3 +295,85 @@ class SesionFechaPivotOut(BaseModel):
 class EnteServidorPublicoCreate(BaseModel):
     id_ente: str
     id_servidor_publico: int
+
+# ===============================
+# Rubros
+# ===============================
+class RubroOut(BaseModel):
+    id: str
+    descripcion: str
+    activo: bool
+
+    class Config:
+        from_attributes = True
+
+
+class RubroCreate(BaseModel):
+    id: str
+    descripcion: str
+
+
+class RubroUpdate(BaseModel):
+    id: str
+    descripcion: str
+
+
+class RubroDelete(BaseModel):
+    id: str
+
+
+# ===============================
+# Proveedor
+# ===============================
+from pydantic import BaseModel, EmailStr
+from typing import Optional
+
+class ProveedorOut(BaseModel):
+    rfc: str
+    razon_social: str
+    nombre_comercial: Optional[str]
+    persona_juridica: Optional[str]
+    correo_electronico: Optional[EmailStr]
+    activo: bool
+    id_entidad_federativa: int
+    entidad_federativa: str
+
+    class Config:
+        from_attributes = True
+
+
+class ProveedorCreate(BaseModel):
+    rfc: str
+    razon_social: str
+    nombre_comercial: Optional[str] = None
+    persona_juridica: Optional[str] = None
+    correo_electronico: Optional[EmailStr] = None
+    id_entidad_federativa: int
+    entidad_federativa: Optional[str] = None
+
+
+class ProveedorUpdate(BaseModel):
+    rfc: str
+    razon_social: str
+    nombre_comercial: Optional[str] = None
+    persona_juridica: Optional[str] = None
+    correo_electronico: Optional[EmailStr] = None
+    id_entidad_federativa: int
+    entidad_federativa: Optional[str] = None
+
+
+class ProveedorDelete(BaseModel):
+    rfc: str
+
+
+# ===============================
+# Entidades Federativas
+# ===============================
+from pydantic import BaseModel
+
+class EntidadFederativaOut(BaseModel):
+    id: int
+    descripcion: str
+
+    class Config:
+        from_attributes = True

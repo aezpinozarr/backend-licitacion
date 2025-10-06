@@ -1,0 +1,154 @@
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.orm import Session
+from sqlalchemy import text
+from typing import List, Optional
+from app.db import get_db
+from app import schemas
+
+router = APIRouter(
+    prefix="/catalogos/rubro",
+    tags=["Catálogo Rubro"]
+)
+
+# ===============================
+# Obtener rubros
+# ===============================
+@router.get("/", response_model=List[schemas.RubroOut])
+def get_rubros(
+    p_id: Optional[str] = Query("-99", description="ID del rubro (-99 para todos)"),
+    db: Session = Depends(get_db)
+):
+    """
+    Obtiene los rubros registrados.
+    Si p_id = -99, devuelve todos los rubros.
+    """
+    try:
+        rows = db.execute(
+            text("SELECT * FROM catalogos.sp_cat_rubro(:p_id)"),
+            {"p_id": p_id}
+        ).mappings().all()
+
+        return [schemas.RubroOut(**row) for row in rows]
+
+    except Exception as e:
+        print("❌ Error en /rubro:", repr(e))
+        raise HTTPException(status_code=500, detail="Error al obtener los rubros")
+
+
+# ===============================
+# Crear rubro
+# ===============================
+@router.post("/", response_model=int)
+def crear_rubro(data: schemas.RubroCreate, db: Session = Depends(get_db)):
+    """
+    Crea un nuevo rubro mediante el procedimiento almacenado.
+    Retorna 1 si se inserta correctamente.
+    """
+    try:
+        print(f"🟡 Intentando crear rubro: ID={data.id}, Descripción={data.descripcion}")
+        result = db.execute(
+            text("""
+                SELECT catalogos.sp_cat_rubro_gestionar(
+                    'NUEVO',
+                    CAST(:p_id AS varchar),
+                    CAST(:p_descripcion AS varchar)
+                )
+            """),
+            {"p_id": data.id, "p_descripcion": data.descripcion}
+        ).scalar()
+
+        db.commit()
+        print(f"✅ Resultado del procedimiento: {result}")
+        return result
+
+    except Exception as e:
+        # 👇 Aquí mostramos el error SQL exacto
+        import traceback
+        print("❌ ERROR DETALLADO EN RUBRO.PY")
+        traceback.print_exc()
+        print("⚠️ Exception message:", str(e))
+        raise HTTPException(status_code=500, detail=f"Error al crear rubro: {str(e)}")
+
+
+# ===============================
+# Editar rubro
+# ===============================
+@router.put("/", response_model=int)
+def editar_rubro(data: schemas.RubroUpdate, db: Session = Depends(get_db)):
+    """
+    Edita un rubro existente (solo la descripción).
+    Retorna 1 si se actualiza correctamente.
+    """
+    try:
+        result = db.execute(
+            text("""
+                SELECT catalogos.sp_cat_rubro_gestionar(
+                    'EDITAR',
+                    CAST(:p_id AS varchar),
+                    CAST(:p_descripcion AS varchar)
+                )
+            """),
+            {"p_id": data.id, "p_descripcion": data.descripcion}
+        ).scalar()
+
+        db.commit()
+        return result
+    except Exception as e:
+        print("❌ Error al editar rubro:", repr(e))
+        raise HTTPException(status_code=500, detail="Error al editar rubro")
+
+
+# ===============================
+# Eliminar rubro (inactivar)
+# ===============================
+@router.delete("/", response_model=int)
+def eliminar_rubro(data: schemas.RubroDelete, db: Session = Depends(get_db)):
+    """
+    Marca un rubro como inactivo (ELIMINAR).
+    Retorna 1 si se actualiza correctamente.
+    """
+    try:
+        result = db.execute(
+            text("""
+                SELECT catalogos.sp_cat_rubro_gestionar(
+                    'ELIMINAR',
+                    CAST(:p_id AS varchar),
+                    NULL
+                )
+            """),
+            {"p_id": data.id}
+        ).scalar()
+
+        db.commit()
+        return result
+    except Exception as e:
+        print("❌ Error al eliminar rubro:", repr(e))
+        raise HTTPException(status_code=500, detail="Error al eliminar rubro")
+
+
+# ===============================
+# Recuperar rubro (reactivar)
+# ===============================
+@router.put("/recuperar", response_model=int)
+def recuperar_rubro(data: schemas.RubroDelete, db: Session = Depends(get_db)):
+    """
+    Reactiva un rubro previamente eliminado (RECUPERAR).
+    Retorna 1 si se actualiza correctamente.
+    """
+    try:
+        result = db.execute(
+            text("""
+                SELECT catalogos.sp_cat_rubro_gestionar(
+                    'RECUPERAR',
+                    CAST(:p_id AS varchar),
+                    NULL
+                )
+            """),
+            {"p_id": data.id}
+        ).scalar()
+
+        db.commit()
+        return result
+    except Exception as e:
+        print("❌ Error al recuperar rubro:", repr(e))
+        raise HTTPException(status_code=500, detail="Error al recuperar rubro")
