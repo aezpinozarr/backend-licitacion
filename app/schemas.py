@@ -1,4 +1,3 @@
-# app/schemas.py
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime, date, time
@@ -92,6 +91,7 @@ class SesionOut(SesionBase):
     id: int
     creado_en: Optional[datetime] = None
 
+
 # ===========================
 # Ente
 # ===========================
@@ -104,27 +104,16 @@ class EnteOut(BaseModel):
     ente_tipo_descripcion: Optional[str]
 
     class Config:
-        from_attributes = True  # En Pydantic v2 sustituye a orm_mode
+        from_attributes = True
 
 
 class ClasificacionLicitacionOut(BaseModel):
     id: int
     descripcion: str
+    tipo_licitacion: str
 
     class Config:
-        from_attributes = True  # reemplaza orm_mode
-
-
-class EnteOut(BaseModel):
-    id: str
-    descripcion: str
-    siglas: Optional[str]
-    clasificacion: Optional[str]
-    id_ente_tipo: Optional[str]
-    ente_tipo_descripcion: Optional[str]
-
-    class Config:
-        from_attributes = True
+        from_attributes = True  
 
 
 class ServidorPublicoOut(BaseModel):
@@ -154,13 +143,18 @@ class ModoSesionOut(BaseModel):
     class Config:
         from_attributes = True
 
-class ClasificacionLicitacionOut(BaseModel):
+
+# ===========================
+# Fuentes de financiamiento (catálogo)
+# ===========================
+class FuenteFinanciamiento(BaseModel):
     id: int
     descripcion: str
-    tipo_licitacion: str
+    etiquetado: str   # 👈 aquí agregamos la columna
 
     class Config:
-        from_attributes = True  
+        from_attributes = True
+
 
 # ===========================
 # Sesiones - Fuentes de financiamiento
@@ -179,38 +173,23 @@ class SesionFuenteOut(BaseModel):
     id_fuente_financiamiento: int
     fuente_descripcion: str
 
-# ===========================
-# Fuentes de financiamiento
-# ===========================
-class FuenteFinanciamiento(BaseModel):
-    id: int
-    descripcion: str
-
-class SesionFuenteBase(BaseModel):
-    id_calendario_sesiones: int
-    id_fuente_financiamiento: int
-
-class SesionFuenteCreate(SesionFuenteBase):
-    pass
-
-class SesionFuenteOut(BaseModel):
-    id_calendario_sesiones: int
-    id_fuente_financiamiento: int
-    fuente_descripcion: str
+    class Config:
+        from_attributes = True
 
 
 # ========= Fechas de sesiones =========
-
 class SesionFechaCreate(BaseModel):
     id_calendario_sesiones: int
     fecha: date
-    hora: time   # 👈 antes era datetime con tz
+    hora: time   # 👈 sin tz
     activo: bool = True
+
 
 class SesionFechaUpdate(BaseModel):
     id: int
     fecha: date
-    hora: time   # 👈 igual aquí, sin tz
+    hora: time   # 👈 sin tz
+
 
 class SesionFechaOut(BaseModel):
     id: int
@@ -220,16 +199,7 @@ class SesionFechaOut(BaseModel):
     activo: bool
 
 
-class EntregableOut(BaseModel):
-    id: int
-    descripcion: str
-    id_calendario_sesiones: int
-    estatus: bool
-
-    class Config:
-        from_attributes = True
-
-
+# ========= Entregables =========
 class EntregableOut(BaseModel):
     id: int
     descripcion: str
@@ -243,7 +213,6 @@ class EntregableOut(BaseModel):
 # ==========================
 # Schemas para Entes
 # ==========================
-
 class EnteBase(BaseModel):
     descripcion: str
     siglas: str
@@ -251,20 +220,23 @@ class EnteBase(BaseModel):
     id_ente_tipo: str
     activo: Optional[bool] = True
 
+
 class EnteCreate(EnteBase):
     pass
 
+
 class EnteUpdate(EnteBase):
     pass
+
 
 class EnteOut(EnteBase):
     id: str
     ente_tipo_descripcion: str
 
+
 # ==========================
 # Schemas para Tipo de Ente
 # ==========================
-
 class EnteTipoOut(BaseModel):
     id: str
     descripcion: str
@@ -273,30 +245,30 @@ class EnteTipoOut(BaseModel):
 # ==========================
 # Schemas para Servidores Públicos
 # ==========================
-
 class ServidorPublicoBase(BaseModel):
     nombre: str
     cargo: str
     activo: bool = True
 
+
 class ServidorPublicoCreate(ServidorPublicoBase):
     pass
 
+
 class ServidorPublicoUpdate(ServidorPublicoBase):
     id: int
+
 
 class ServidorPublicoOut(ServidorPublicoBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # ==========================
 # Calendario Sesiones Pivot
 # ==========================
-
-
 class SesionFechaPivotOut(BaseModel):
     id: int
     id_calendario_sesiones: int
@@ -316,3 +288,10 @@ class SesionFechaPivotOut(BaseModel):
     OCT: Optional[str] = None
     NOV: Optional[str] = None
     DIC: Optional[str] = None
+
+# ===============================
+# Ente - Servidor Público (relación)
+# ===============================
+class EnteServidorPublicoCreate(BaseModel):
+    id_ente: str
+    id_servidor_publico: int

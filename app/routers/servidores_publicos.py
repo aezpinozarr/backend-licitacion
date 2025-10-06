@@ -1,9 +1,8 @@
-# Ente - Servidor - Público
 # app/routers/servidores_publicos.py
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import text
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from app.db import get_db
 
 router = APIRouter(
@@ -13,8 +12,8 @@ router = APIRouter(
 
 @router.get("/", response_model=List[Dict[str, Any]])
 def get_servidores_publicos(
-    p_id: int = -99,
-    p_id_ente: str = "-99",
+    p_id: int = Query(-99, description="ID del servidor (-99 para todos)"),
+    p_id_ente: str = Query("-99", description="ID del ente (-99 para todos)"),
     db: Session = Depends(get_db)
 ):
     """
@@ -24,12 +23,14 @@ def get_servidores_publicos(
     """
     try:
         result = db.execute(
-            text("SELECT * FROM catalogos.sp_servidor_publico_ente(:p_id, :p_id_ente)"),
+            text("""
+                SELECT * FROM catalogos.sp_ente_servidor_publico(:p_id, :p_id_ente)
+            """),
             {"p_id": p_id, "p_id_ente": p_id_ente}
         ).fetchall()
 
-        # Convertir cada fila en dict
         return [dict(row._mapping) for row in result]
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print("❌ Error en /servidores-publicos-ente:", repr(e))
+        raise HTTPException(status_code=500, detail="Error interno al obtener servidores públicos por ente")

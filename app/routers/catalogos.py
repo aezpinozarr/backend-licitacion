@@ -91,13 +91,13 @@ def get_enum_modo_sesion(db: Session = Depends(get_db)):
 
 
 # ===========================
-# Fuentes de financiamiento
+# Fuentes de financiamiento (directo de la tabla catálogo)
 # ===========================
 @router.get("/fuentes-financiamiento", response_model=List[schemas.FuenteFinanciamiento])
 def get_fuentes_financiamiento(db: Session = Depends(get_db)):
     try:
         result = db.execute(
-            text("SELECT id, descripcion FROM catalogos.cat_fuente_financiamiento ORDER BY id")
+            text("SELECT id, descripcion, etiquetado FROM catalogos.cat_fuente_financiamiento")
         ).mappings().all()
         return result
     except Exception as e:
@@ -118,12 +118,12 @@ def get_servidores_publicos_ente(
         p_id_ente_casted = str(p_id_ente) if p_id_ente not in (None, -99) else "-99"
 
         sql = text("""
-            SELECT *
-            FROM catalogos.sp_servidor_publico_ente(
-                CAST(:p_id AS smallint),
-                CAST(:p_id_ente AS varchar)
-            )
-        """)
+    SELECT *
+    FROM catalogos.sp_ente_servidor_publico(
+        CAST(:p_id AS smallint),
+        CAST(:p_id_ente AS varchar)
+    )
+""")
 
         rows = db.execute(sql, {"p_id": p_id_casted, "p_id_ente": p_id_ente_casted}).mappings().all()
         return [dict(r) for r in rows]
