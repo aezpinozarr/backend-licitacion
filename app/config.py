@@ -8,10 +8,11 @@ class Settings(BaseSettings):
     db_user: str = "miusuario"
     db_password: str = "micontrasena"
     cors_origins: str = (
-        "http://localhost:3000,"
-        "http://127.0.0.1:3000,"
-        "https://my-dashboard-production-ecd1.up.railway.app"
-    )
+    "http://localhost:3000,"
+    "http://127.0.0.1:3000,"
+    "https://my-dashboard-production-ecd1.up.railway.app,"
+    "https://my-dashboard-production-cd1a.up.railway.app"
+)
 
     class Config:
         env_file = ".env"
