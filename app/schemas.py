@@ -377,3 +377,49 @@ class EntidadFederativaOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+# ===========================================
+# 🧱 USUARIOS
+# ===========================================
+
+# =======================
+# 🔹 Crear usuario
+# =======================
+class UsuarioCreate(BaseModel):
+    p_username: str
+    p_nombre: str
+    p_pass_hash: str
+    p_id_ente: str
+    p_tipo: str
+
+
+# =======================
+# 🔹 Editar usuario
+# =======================
+class UsuarioUpdate(BaseModel):
+    p_id: int
+    p_username: str
+    p_nombre: str
+    p_pass_hash: Optional[str] = None
+    p_id_ente: str
+    p_tipo: str
+
+
+# =======================
+# 🔹 Login
+# =======================
+class UsuarioLogin(BaseModel):
+    p_username: str
+    p_password: str
+
+
+# =======================
+# 🔹 Salida
+# =======================
+class UsuarioOut(BaseModel):
+    id: int
+    username: str
+    nombre: Optional[str] = None
+    tipo: Optional[str] = None
+    activo: bool
