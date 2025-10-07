@@ -1,32 +1,17 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-# ❌ Quitamos HTTPSRedirectMiddleware porque Railway ya fuerza HTTPS automáticamente
-# from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
+# ❌ No importamos HTTPSRedirectMiddleware
 
 from app.routers import (
-    clientes,
-    catalogos,
-    sesiones,
-    sesiones_fuentes,
-    sesiones_fechas,
-    sesiones_entregables,
-    entes,
-    ente_tipo,
-    servidores_publicos,
-    servidor_publico,
-    sesiones_fechas_pivot,
-    ente_servidor_publico,
-    rubro,
-    proveedor,
-    entidad_federativa,
+    clientes, catalogos, sesiones, sesiones_fuentes, sesiones_fechas,
+    sesiones_entregables, entes, ente_tipo, servidores_publicos, servidor_publico,
+    sesiones_fechas_pivot, ente_servidor_publico, rubro, proveedor, entidad_federativa
 )
 from app.config import settings
 
 app = FastAPI()
 
-# ================================
-# ✅ Configuración de CORS
-# ================================
+# ✅ CORS configurado para entornos local + Railway
 origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
@@ -42,9 +27,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ================================
-# 📦 Rutas principales
-# ================================
+# ✅ Routers principales
 app.include_router(clientes.router)
 app.include_router(catalogos.router)
 app.include_router(sesiones.router)
@@ -61,9 +44,7 @@ app.include_router(rubro.router)
 app.include_router(proveedor.router)
 app.include_router(entidad_federativa.router)
 
-# ================================
-# 🔍 Verificación rápida
-# ================================
+# ✅ Ruta raíz para probar conexión
 @app.get("/")
 def root():
-    return {"status": "ok", "message": "Backend conectado correctamente 🚀"}
+    return {"status": "ok", "message": "Backend en Railway funcionando correctamente 🚀"}
