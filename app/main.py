@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.responses import RedirectResponse
+from starlette.middleware.httpsredirect import HTTPSRedirectMiddleware
+import os
 
 from app.routers import (
     clientes, catalogos, sesiones, sesiones_fuentes, sesiones_fechas,
@@ -9,26 +9,22 @@ from app.routers import (
     sesiones_fechas_pivot, ente_servidor_publico, rubro, proveedor, entidad_federativa
 )
 
-# =======================================================
-# 🚀 FastAPI app
-# =======================================================
 app = FastAPI(title="Backend Licitación", version="1.0")
 
 # =======================================================
-# ✅ Forzar HTTPS sin loops (manejado manualmente)
+# ⚙️ Middleware de seguridad
 # =======================================================
-class ForceHTTPSMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request, call_next):
-        # Si llega por HTTP, redirigir a HTTPS
-        if request.url.scheme == "http":
-            url = request.url.replace(scheme="https")
-            return RedirectResponse(url=str(url))
-        return await call_next(request)
-
-app.add_middleware(ForceHTTPSMiddleware)
+# ❌ No forzamos redirecciones, Railway ya usa HTTPS a nivel de proxy.
+# Pero sí agregamos cabeceras para evitar que el navegador lo trate como inseguro.
+@app.middleware("http")
+async def enforce_https_headers(request, call_next):
+    response = await call_next(request)
+    response.headers["Strict-Transport-Security"] = "max-age=63072000; includeSubDomains; preload"
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    return response
 
 # =======================================================
-# 🌐 CORS seguro
+# 🌐 CORS
 # =======================================================
 origins = [
     "http://localhost:3000",
@@ -36,7 +32,6 @@ origins = [
     "https://my-dashboard-production-ecd1.up.railway.app",
     "https://my-dashboard-production-cd1a.up.railway.app",
 ]
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -46,7 +41,7 @@ app.add_middleware(
 )
 
 # =======================================================
-# 📦 Rutas principales
+# 📦 Rutas
 # =======================================================
 app.include_router(clientes.router)
 app.include_router(catalogos.router)
@@ -65,8 +60,11 @@ app.include_router(proveedor.router)
 app.include_router(entidad_federativa.router)
 
 # =======================================================
-# 🔍 Endpoint de prueba
+# 🔍 Verificación
 # =======================================================
 @app.get("/")
 def root():
-    return {"status": "ok", "message": "🚀 Backend activo y forzando HTTPS correctamente"}
+    return {
+        "status": "ok",
+        "message": "🚀 Backend activo con HTTPS estable y CORS configurado correctamente",
+    }
