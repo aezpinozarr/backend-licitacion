@@ -5,6 +5,10 @@ from typing import List, Optional
 from app.db import get_db
 from app import schemas
 
+# ======================================================
+# ✅ IMPORTANTE:
+# Quitamos la barra extra del prefix para evitar redirecciones 307
+# ======================================================
 router = APIRouter(
     prefix="/catalogos/rubro",
     tags=["Catálogo Rubro"]
@@ -13,7 +17,7 @@ router = APIRouter(
 # ===============================
 # Obtener rubros
 # ===============================
-@router.get("/", response_model=List[schemas.RubroOut])
+@router.get("", response_model=List[schemas.RubroOut])  # 👈 sin barra final
 def get_rubros(
     p_id: Optional[str] = Query("-99", description="ID del rubro (-99 para todos)"),
     db: Session = Depends(get_db)
@@ -27,18 +31,15 @@ def get_rubros(
             text("SELECT * FROM catalogos.sp_cat_rubro(:p_id)"),
             {"p_id": p_id}
         ).mappings().all()
-
         return [schemas.RubroOut(**row) for row in rows]
-
     except Exception as e:
         print("❌ Error en /rubro:", repr(e))
         raise HTTPException(status_code=500, detail="Error al obtener los rubros")
 
-
 # ===============================
 # Crear rubro
 # ===============================
-@router.post("/", response_model=int)
+@router.post("", response_model=int)  # 👈 sin barra final
 def crear_rubro(data: schemas.RubroCreate, db: Session = Depends(get_db)):
     """
     Crea un nuevo rubro mediante el procedimiento almacenado.
@@ -56,24 +57,19 @@ def crear_rubro(data: schemas.RubroCreate, db: Session = Depends(get_db)):
             """),
             {"p_id": data.id, "p_descripcion": data.descripcion}
         ).scalar()
-
         db.commit()
         print(f"✅ Resultado del procedimiento: {result}")
         return result
-
     except Exception as e:
-        # 👇 Aquí mostramos el error SQL exacto
         import traceback
         print("❌ ERROR DETALLADO EN RUBRO.PY")
         traceback.print_exc()
-        print("⚠️ Exception message:", str(e))
         raise HTTPException(status_code=500, detail=f"Error al crear rubro: {str(e)}")
-
 
 # ===============================
 # Editar rubro
 # ===============================
-@router.put("/", response_model=int)
+@router.put("", response_model=int)  # 👈 sin barra final
 def editar_rubro(data: schemas.RubroUpdate, db: Session = Depends(get_db)):
     """
     Edita un rubro existente (solo la descripción).
@@ -90,18 +86,16 @@ def editar_rubro(data: schemas.RubroUpdate, db: Session = Depends(get_db)):
             """),
             {"p_id": data.id, "p_descripcion": data.descripcion}
         ).scalar()
-
         db.commit()
         return result
     except Exception as e:
         print("❌ Error al editar rubro:", repr(e))
         raise HTTPException(status_code=500, detail="Error al editar rubro")
 
-
 # ===============================
 # Eliminar rubro (inactivar)
 # ===============================
-@router.delete("/", response_model=int)
+@router.delete("", response_model=int)  # 👈 sin barra final
 def eliminar_rubro(data: schemas.RubroDelete, db: Session = Depends(get_db)):
     """
     Marca un rubro como inactivo (ELIMINAR).
@@ -118,13 +112,11 @@ def eliminar_rubro(data: schemas.RubroDelete, db: Session = Depends(get_db)):
             """),
             {"p_id": data.id}
         ).scalar()
-
         db.commit()
         return result
     except Exception as e:
         print("❌ Error al eliminar rubro:", repr(e))
         raise HTTPException(status_code=500, detail="Error al eliminar rubro")
-
 
 # ===============================
 # Recuperar rubro (reactivar)
@@ -146,7 +138,6 @@ def recuperar_rubro(data: schemas.RubroDelete, db: Session = Depends(get_db)):
             """),
             {"p_id": data.id}
         ).scalar()
-
         db.commit()
         return result
     except Exception as e:
