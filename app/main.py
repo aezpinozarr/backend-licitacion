@@ -1,35 +1,17 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import RedirectResponse
-from starlette.middleware.base import BaseHTTPMiddleware
+# ❌ No importamos HTTPSRedirectMiddleware
+
 from app.routers import (
     clientes, catalogos, sesiones, sesiones_fuentes, sesiones_fechas,
     sesiones_entregables, entes, ente_tipo, servidores_publicos, servidor_publico,
     sesiones_fechas_pivot, ente_servidor_publico, rubro, proveedor, entidad_federativa
 )
+from app.config import settings
 
-# ======================================
-# 🌐 Middleware personalizado HTTPS
-# ======================================
-class ForceHTTPSMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next):
-        # Si la conexión viene por HTTP, redirigir a HTTPS manualmente
-        if request.url.scheme == "http":
-            https_url = request.url.replace(scheme="https")
-            return RedirectResponse(url=str(https_url))
-        return await call_next(request)
+app = FastAPI()
 
-# ======================================
-# 🚀 Inicialización de la app
-# ======================================
-app = FastAPI(title="Backend Licitación", version="1.0.0")
-
-# ✅ Añadir middleware para forzar HTTPS
-app.add_middleware(ForceHTTPSMiddleware)
-
-# ======================================
-# 🌍 Configuración de CORS
-# ======================================
+# ✅ CORS configurado para entornos local + Railway
 origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
@@ -45,9 +27,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ======================================
-# 🧩 Rutas
-# ======================================
+# ✅ Routers principales
 app.include_router(clientes.router)
 app.include_router(catalogos.router)
 app.include_router(sesiones.router)
@@ -64,9 +44,7 @@ app.include_router(rubro.router)
 app.include_router(proveedor.router)
 app.include_router(entidad_federativa.router)
 
-# ======================================
-# 🩵 Ruta raíz
-# ======================================
+# ✅ Ruta raíz para probar conexión
 @app.get("/")
 def root():
-    return {"status": "ok", "message": "Backend conectado correctamente 🚀 (con HTTPS forzado)"}
+    return {"status": "ok", "message": "Backend en Railway funcionando correctamente 🚀"}
