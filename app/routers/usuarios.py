@@ -144,7 +144,17 @@ def autenticar_usuario(data: schemas.UsuarioLogin, db: Session = Depends(get_db)
         if not result["exito"]:
             raise HTTPException(status_code=401, detail=result["mensaje"])
 
-        return {"success": True, "message": result["mensaje"]}
+        # ✅ Ajuste para coincidir con el frontend
+        return {
+            "exito": result["exito"],
+            "mensaje": result["mensaje"],
+            "id": result["id"],
+            "username": result["username"],
+            "nombre": result["nombre"],
+            "id_ente": result["id_ente"],
+            "tipo": result["tipo"],
+        }
+
     except Exception as e:
         print("❌ Error al autenticar usuario:", e)
         raise HTTPException(status_code=500, detail=str(e))
