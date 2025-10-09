@@ -6,7 +6,10 @@ import os
 from app.routers import (
     clientes, catalogos, sesiones, sesiones_fuentes, sesiones_fechas,
     sesiones_entregables, entes, ente_tipo, servidores_publicos, servidor_publico,
-    sesiones_fechas_pivot, ente_servidor_publico, rubro, proveedor, entidad_federativa, usuarios
+    sesiones_fechas_pivot, ente_servidor_publico, rubro, proveedor, entidad_federativa, usuarios,
+    proceso_seguimiento_ente, proceso_seguimiento_presupuesto_ente, proceso_seguimiento_presupuesto_proveedor_ente,
+    catalogos_ente, catalogos_servidor_publico,catalogos_sesion_numero,proceso_enum_tipo_licitacion, partidas,
+    fuentes_financiamiento
 )
 
 app = FastAPI(title="Backend Licitación", version="1.0")
@@ -59,6 +62,15 @@ app.include_router(rubro.router)
 app.include_router(proveedor.router)
 app.include_router(entidad_federativa.router)
 app.include_router(usuarios.router)
+app.include_router(proceso_seguimiento_ente.router)
+app.include_router(proceso_seguimiento_presupuesto_ente.router)
+app.include_router(proceso_seguimiento_presupuesto_proveedor_ente.router)
+app.include_router(catalogos_ente.router)
+app.include_router(catalogos_servidor_publico.router)
+app.include_router(catalogos_sesion_numero.router)
+app.include_router(proceso_enum_tipo_licitacion.router)
+app.include_router(partidas.router)
+app.include_router(fuentes_financiamiento.router)
 # =======================================================
 # 🔍 Verificación
 # =======================================================

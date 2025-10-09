@@ -423,3 +423,39 @@ class UsuarioOut(BaseModel):
     nombre: Optional[str] = None
     tipo: Optional[str] = None
     activo: bool
+
+# =========================
+# Seguimiento de procesos
+# =========================
+
+class ProcesoSeguimientoEnteIn(BaseModel):
+    p_accion: str  # 'NUEVO' o 'EDITAR'
+    p_id: Optional[int] = None
+    p_e_id_ente: str
+    p_e_oficio_invitacion: str
+    p_e_id_servidor_publico_emite: int
+    p_e_servidor_publico_cargo: str
+    p_e_tipo_licitacion: str
+    p_e_tipo_licitacion_no_veces: int
+    p_e_tipo_licitacion_notas: Optional[str] = ""
+    p_e_fecha_y_hora_reunion: datetime
+    p_e_id_usuario_registra: int
+
+
+class ProcesoPresupuestoEnteIn(BaseModel):
+    p_accion: str  # 'NUEVO' o 'EDITAR'
+    p_id_proceso_seguimiento: int
+    p_id: Optional[int] = None
+    p_e_no_requisicion: str
+    p_e_id_partida: str
+    p_e_id_rubro: str
+    p_e_id_fuente_financiamiento: str
+    p_e_monto_presupuesto_suficiencia: float
+
+
+class ProcesoPresupuestoProveedorIn(BaseModel):
+    p_accion: str  # 'NUEVO' o 'EDITAR'
+    p_id_proceso_seguimiento: int
+    p_e_rfc_proveedor: str
+    p_e_importe_sin_iva: float
+    p_e_importe_total: float
