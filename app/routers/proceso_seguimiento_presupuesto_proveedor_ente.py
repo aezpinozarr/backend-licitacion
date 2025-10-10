@@ -19,19 +19,21 @@ def gestionar_presupuesto_proveedor(data: schemas.ProcesoPresupuestoProveedorIn,
     para crear o editar los importes del proveedor.
     """
     try:
+        # ⚙️ Actualizado: el parámetro ahora se llama p_id_proceso_seguimiento_presupuesto
         query = text("""
             SELECT procesos.sp_proceso_seguimiento_presupuesto_proveedor_ente_captura(
                 :p_accion,
-                :p_id_proceso_seguimiento,
+                :p_id_proceso_seguimiento_presupuesto,
                 :p_e_rfc_proveedor,
                 :p_e_importe_sin_iva,
                 :p_e_importe_total
             )
         """)
 
+        # ⚙️ Cambiado el nombre del parámetro en el dict
         params = {
             "p_accion": data.p_accion,
-            "p_id_proceso_seguimiento": data.p_id_proceso_seguimiento,
+            "p_id_proceso_seguimiento_presupuesto": data.p_id_proceso_seguimiento_presupuesto,
             "p_e_rfc_proveedor": data.p_e_rfc_proveedor,
             "p_e_importe_sin_iva": data.p_e_importe_sin_iva,
             "p_e_importe_total": data.p_e_importe_total

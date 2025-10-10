@@ -454,8 +454,8 @@ class ProcesoPresupuestoEnteIn(BaseModel):
 
 
 class ProcesoPresupuestoProveedorIn(BaseModel):
-    p_accion: str  # 'NUEVO' o 'EDITAR'
-    p_id_proceso_seguimiento: int
+    p_accion: str
+    p_id_proceso_seguimiento_presupuesto: int  # 👈 nuevo campo
     p_e_rfc_proveedor: str
     p_e_importe_sin_iva: float
     p_e_importe_total: float
