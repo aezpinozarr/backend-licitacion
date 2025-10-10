@@ -9,7 +9,7 @@ from app.routers import (
     sesiones_fechas_pivot, ente_servidor_publico, rubro, proveedor, entidad_federativa, usuarios,
     proceso_seguimiento_ente, proceso_seguimiento_presupuesto_ente, proceso_seguimiento_presupuesto_proveedor_ente,
     catalogos_ente, catalogos_servidor_publico,catalogos_sesion_numero,proceso_enum_tipo_licitacion, partidas,
-    fuentes_financiamiento
+    fuentes_financiamiento, presupuesto_proveedor
 )
 
 app = FastAPI(title="Backend Licitación", version="1.0")
@@ -71,6 +71,7 @@ app.include_router(catalogos_sesion_numero.router)
 app.include_router(proceso_enum_tipo_licitacion.router)
 app.include_router(partidas.router)
 app.include_router(fuentes_financiamiento.router)
+app.include_router(presupuesto_proveedor.router)
 # =======================================================
 # 🔍 Verificación
 # =======================================================
