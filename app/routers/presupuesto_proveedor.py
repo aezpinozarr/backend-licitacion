@@ -2,6 +2,7 @@
 from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import text
+from typing import Optional  # ✅ Compatible con Python 3.9
 from app.db import get_db
 
 router = APIRouter(
@@ -14,7 +15,7 @@ router = APIRouter(
 # ===========================
 @router.get("/presupuesto-proveedor/")
 def get_presupuesto_proveedor(
-    p_id_proceso: int = Query(..., description="ID del proceso seguimiento"),
+    p_id_proceso: Optional[int] = Query(None, description="ID del proceso seguimiento"),
     db: Session = Depends(get_db)
 ):
     """
@@ -22,7 +23,6 @@ def get_presupuesto_proveedor(
     Incluye datos del ente, presupuesto y proveedor asociados al proceso.
     """
     try:
-        # ✅ CORREGIDO: usamos "id" en lugar de "id_proceso_seguimiento"
         query = text("""
             SELECT *
             FROM procesos.v_proceso_seguimiento_presupuesto_proveedor
@@ -32,7 +32,6 @@ def get_presupuesto_proveedor(
 
         result = db.execute(query, {"p_id_proceso": p_id_proceso}).fetchall()
 
-        # ✅ Si no hay datos, devolvemos lista vacía (no error)
         if not result:
             return {
                 "status": "ok",
@@ -75,4 +74,39 @@ def list_presupuestos_proveedor(db: Session = Depends(get_db)):
 
     except Exception as e:
         print(f"❌ Error en list_presupuestos_proveedor: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ===========================
+# 🔎 Listar por ente (para usuarios tipo ENTE)
+# ===========================
+@router.get("/presupuesto-proveedor/by-ente")
+def list_presupuestos_proveedor_por_ente(
+    p_id_ente: Optional[int] = Query(None, description="ID del ente (entero)"),
+    db: Session = Depends(get_db)
+):
+    """
+    Devuelve los registros de la vista filtrados por el ente.
+    Usa el campo auxiliar id_ente_int (entero) para comparar sin errores de tipo.
+    """
+    try:
+        if not p_id_ente:
+            raise HTTPException(status_code=400, detail="Debe especificarse un ID de ente válido.")
+
+        query = text("""
+            SELECT *
+            FROM procesos.v_proceso_seguimiento_presupuesto_proveedor
+            WHERE id_ente_int = :p_id_ente
+            ORDER BY id DESC;
+        """)
+        result = db.execute(query, {"p_id_ente": p_id_ente}).fetchall()
+
+        return {
+            "status": "ok",
+            "total": len(result),
+            "resultado": [dict(row._mapping) for row in result],
+        }
+
+    except Exception as e:
+        print(f"❌ Error en list_presupuestos_proveedor_por_ente: {e}")
         raise HTTPException(status_code=500, detail=str(e))
