@@ -8,17 +8,20 @@ from app.routers import (
     sesiones_entregables, entes, ente_tipo, servidores_publicos, servidor_publico,
     sesiones_fechas_pivot, ente_servidor_publico, rubro, proveedor, entidad_federativa, usuarios,
     proceso_seguimiento_ente, proceso_seguimiento_presupuesto_ente, proceso_seguimiento_presupuesto_proveedor_ente,
-    catalogos_ente, catalogos_servidor_publico,catalogos_sesion_numero,proceso_enum_tipo_licitacion, partidas,
-    fuentes_financiamiento, presupuesto_proveedor
+    catalogos_ente, catalogos_servidor_publico, catalogos_sesion_numero, proceso_enum_tipo_licitacion, partidas,
+    fuentes_financiamiento, presupuesto_proveedor, entes_usuario, tipo_evento, auxiliares, proceso_seguimiento_presupuesto_rubro_ente
 )
 
+# =======================================================
+# 🚀 Configuración principal
+# =======================================================
 app = FastAPI(title="Backend Licitación", version="1.0")
 
 # =======================================================
 # ⚙️ Middleware de seguridad
 # =======================================================
 # ❌ No forzamos redirecciones, Railway ya usa HTTPS a nivel de proxy.
-# Pero sí agregamos cabeceras para evitar que el navegador lo trate como inseguro.
+# ✅ Agregamos cabeceras de seguridad para evitar advertencias del navegador.
 @app.middleware("http")
 async def enforce_https_headers(request, call_next):
     response = await call_next(request)
@@ -27,7 +30,7 @@ async def enforce_https_headers(request, call_next):
     return response
 
 # =======================================================
-# 🌐 CORS
+# 🌐 Configuración CORS
 # =======================================================
 origins = [
     "http://localhost:3000",
@@ -35,6 +38,7 @@ origins = [
     "https://my-dashboard-production-ecd1.up.railway.app",
     "https://my-dashboard-production-cd1a.up.railway.app",
 ]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -44,7 +48,7 @@ app.add_middleware(
 )
 
 # =======================================================
-# 📦 Rutas
+# 📦 Rutas registradas
 # =======================================================
 app.include_router(clientes.router)
 app.include_router(catalogos.router)
@@ -72,8 +76,13 @@ app.include_router(proceso_enum_tipo_licitacion.router)
 app.include_router(partidas.router)
 app.include_router(fuentes_financiamiento.router)
 app.include_router(presupuesto_proveedor.router)
+app.include_router(entes_usuario.router)
+app.include_router(tipo_evento.router)
+app.include_router(auxiliares.router)
+app.include_router(proceso_seguimiento_presupuesto_rubro_ente.router)
+
 # =======================================================
-# 🔍 Verificación
+# 🔍 Endpoint raíz para verificación
 # =======================================================
 @app.get("/")
 def root():

@@ -15,12 +15,12 @@ router = APIRouter(
 @router.post("/", response_model=dict)
 def gestionar_proceso_ente(data: schemas.ProcesoSeguimientoEnteIn, db: Session = Depends(get_db)):
     """
-    Llama al SP procesos.sp_proceso_seguimiento_ente_captura
+    Llama al SP procesos.sp_seguimiento_ente_captura
     para crear o editar un registro de seguimiento del ente.
     """
     try:
         query = text("""
-            SELECT procesos.sp_proceso_seguimiento_ente_captura(
+            SELECT procesos.sp_seguimiento_ente_captura(
                 :p_accion,
                 :p_id,
                 :p_e_id_ente,

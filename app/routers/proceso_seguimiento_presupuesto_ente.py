@@ -1,3 +1,4 @@
+# app/routers/proceso_seguimiento_presupuesto.py
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import text
@@ -15,18 +16,17 @@ router = APIRouter(
 @router.post("/", response_model=dict)
 def gestionar_presupuesto_ente(data: schemas.ProcesoPresupuestoEnteIn, db: Session = Depends(get_db)):
     """
-    Llama al SP procesos.sp_proceso_seguimiento_presupuesto_ente_captura
+    Llama al SP procesos.sp_seguimiento_presupuesto_ente_captura
     para crear o editar la información presupuestal del ente.
     """
     try:
         query = text("""
-            SELECT procesos.sp_proceso_seguimiento_presupuesto_ente_captura(
+            SELECT procesos.sp_seguimiento_presupuesto_ente_captura(
                 :p_accion,
                 :p_id_proceso_seguimiento,
                 :p_id,
                 :p_e_no_requisicion,
                 :p_e_id_partida,
-                :p_e_id_rubro,
                 :p_e_id_fuente_financiamiento,
                 :p_e_monto_presupuesto_suficiencia
             )
@@ -38,9 +38,8 @@ def gestionar_presupuesto_ente(data: schemas.ProcesoPresupuestoEnteIn, db: Sessi
             "p_id": data.p_id,
             "p_e_no_requisicion": data.p_e_no_requisicion,
             "p_e_id_partida": data.p_e_id_partida,
-            "p_e_id_rubro": data.p_e_id_rubro,
             "p_e_id_fuente_financiamiento": data.p_e_id_fuente_financiamiento,
-            "p_e_monto_presupuesto_suficiencia": data.p_e_monto_presupuesto_suficiencia
+            "p_e_monto_presupuesto_suficiencia": data.p_e_monto_presupuesto_suficiencia,
         }
 
         result = db.execute(query, params).scalar()

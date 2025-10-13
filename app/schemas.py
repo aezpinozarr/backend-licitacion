@@ -1,6 +1,9 @@
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime, date, time
+from pydantic import BaseModel, Field, EmailStr
+from typing import Optional, Union
+from datetime import datetime, date, time
 
 # ===========================
 # Clientes
@@ -148,9 +151,10 @@ class ModoSesionOut(BaseModel):
 # Fuentes de financiamiento (catálogo)
 # ===========================
 class FuenteFinanciamiento(BaseModel):
-    id: int
+    id: Union[int, str]
     descripcion: str
-    etiquetado: str   # 👈 aquí agregamos la columna
+    etiquetado: str
+    fondo: Optional[str] = None  # ✅ agregado para traer columna "fondo"
 
     class Config:
         from_attributes = True
@@ -429,7 +433,7 @@ class UsuarioOut(BaseModel):
 # =========================
 
 class ProcesoSeguimientoEnteIn(BaseModel):
-    p_accion: str  # 'NUEVO' o 'EDITAR'
+    p_accion: str = Field(..., description="'NUEVO' o 'EDITAR'")
     p_id: Optional[int] = None
     p_e_id_ente: str
     p_e_oficio_invitacion: str
@@ -438,20 +442,29 @@ class ProcesoSeguimientoEnteIn(BaseModel):
     p_e_tipo_licitacion: str
     p_e_tipo_licitacion_no_veces: int
     p_e_tipo_licitacion_notas: Optional[str] = ""
-    p_e_fecha_y_hora_reunion: datetime
+    # acepta datetime o string ISO (útil para el front)
+    p_e_fecha_y_hora_reunion: Union[datetime, str]
     p_e_id_usuario_registra: int
+
+    class Config:
+        from_attributes = True
 
 
 class ProcesoPresupuestoEnteIn(BaseModel):
-    p_accion: str  # 'NUEVO' o 'EDITAR'
+    p_accion: str
     p_id_proceso_seguimiento: int
     p_id: Optional[int] = None
     p_e_no_requisicion: str
     p_e_id_partida: str
-    p_e_id_rubro: str
     p_e_id_fuente_financiamiento: str
     p_e_monto_presupuesto_suficiencia: float
 
+class ProcesoPresupuestoRubroEnteIn(BaseModel):
+    p_accion: str
+    p_id_proceso_seguimiento_presupuesto: int
+    p_id: Optional[int] = 0
+    p_e_id_rubro: str
+    p_e_monto_presupuesto_suficiencia: float
 
 class ProcesoPresupuestoProveedorIn(BaseModel):
     p_accion: str
