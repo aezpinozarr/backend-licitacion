@@ -467,10 +467,14 @@ class ProcesoPresupuestoRubroEnteIn(BaseModel):
 
 class ProcesoPresupuestoProveedorIn(BaseModel):
     p_accion: str
-    p_id_proceso_seguimiento_presupuesto: int  # 👈 nuevo campo
+    p_id_proceso_seguimiento_presupuesto: int
+    p_id_proceso_seguimiento_presupuesto_rubro: Optional[int] = None  # ✅ <-- agregar este campo
+    p_id: Optional[int] = 0
     p_e_rfc_proveedor: str
     p_e_importe_sin_iva: float
     p_e_importe_total: float
+    p_r_importe_ajustado_sin_iva: Optional[float] = 0.0
+    p_r_importe_ajustado_total: Optional[float] = 0.0
 
 
 class ProcesoPresupuestoRubroProveedorEnteIn(BaseModel):

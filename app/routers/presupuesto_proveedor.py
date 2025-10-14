@@ -25,7 +25,7 @@ def get_presupuesto_proveedor(
     try:
         query = text("""
             SELECT *
-            FROM procesos.v_proceso_seguimiento_presupuesto_proveedor
+            FROM procesos.v_seguimiento_y_presupuesto_y_rubro_y_proveedor
             WHERE id = :p_id_proceso
             ORDER BY pp_id;
         """)
@@ -61,7 +61,7 @@ def list_presupuestos_proveedor(db: Session = Depends(get_db)):
     try:
         query = text("""
             SELECT *
-            FROM procesos.v_proceso_seguimiento_presupuesto_proveedor
+            FROM procesos.v_seguimiento_y_presupuesto_y_rubro_y_proveedor
             ORDER BY id DESC;
         """)
         result = db.execute(query).fetchall()
@@ -95,8 +95,8 @@ def list_presupuestos_proveedor_por_ente(
 
         query = text("""
             SELECT *
-            FROM procesos.v_proceso_seguimiento_presupuesto_proveedor
-            WHERE id_ente_int = :p_id_ente
+            FROM procesos.v_seguimiento_y_presupuesto_y_rubro_y_proveedor
+            WHERE e_id_ente::text = CAST(:p_id_ente AS text)
             ORDER BY id DESC;
         """)
         result = db.execute(query, {"p_id_ente": p_id_ente}).fetchall()

@@ -9,7 +9,8 @@ from app.routers import (
     sesiones_fechas_pivot, ente_servidor_publico, rubro, proveedor, entidad_federativa, usuarios,
     proceso_seguimiento_ente, proceso_seguimiento_presupuesto_ente, proceso_seguimiento_presupuesto_proveedor_ente,
     catalogos_ente, catalogos_servidor_publico, catalogos_sesion_numero, proceso_enum_tipo_licitacion, partidas,
-    fuentes_financiamiento, presupuesto_proveedor, entes_usuario, tipo_evento, auxiliares, proceso_seguimiento_presupuesto_rubro_ente
+    fuentes_financiamiento, presupuesto_proveedor, entes_usuario, tipo_evento, auxiliares, proceso_seguimiento_presupuesto_rubro_ente,
+    procesos, proceso_detalle
 )
 
 # =======================================================
@@ -80,8 +81,8 @@ app.include_router(entes_usuario.router)
 app.include_router(tipo_evento.router)
 app.include_router(auxiliares.router)
 app.include_router(proceso_seguimiento_presupuesto_rubro_ente.router)
-
-
+app.include_router(procesos.router)
+app.include_router(proceso_detalle.router)
 # =======================================================
 # 🔍 Endpoint raíz para verificación
 # =======================================================
