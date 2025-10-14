@@ -35,14 +35,14 @@ def gestionar_presupuesto_rubro_ente(data: schemas.ProcesoPresupuestoRubroEnteIn
             "p_id_proceso_seguimiento_presupuesto": data.p_id_proceso_seguimiento_presupuesto,
             "p_id": data.p_id,
             "p_e_id_rubro": data.p_e_id_rubro,
-            "p_e_monto_presupuesto_suficiencia": data.p_e_monto_presupuesto_suficiencia,
+            "p_e_monto_presupuesto_suficiencia": data.p_e_monto_presupuesto_suficiencia
         }
 
         result = db.execute(query, params).scalar()
         db.commit()
 
         if not result:
-            raise HTTPException(status_code=400, detail="No se pudo registrar el presupuesto del rubro")
+            raise HTTPException(status_code=400, detail="No se pudo registrar el presupuesto del rubro-proveedor")
 
         return {"resultado": result, "mensaje": "✅ Presupuesto de rubro registrado correctamente"}
 

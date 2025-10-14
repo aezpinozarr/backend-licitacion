@@ -56,7 +56,7 @@ app.include_router(sesiones.router)
 app.include_router(sesiones_fuentes.router)
 app.include_router(sesiones_fechas.router)
 app.include_router(sesiones_entregables.router)
-app.include_router(entes.router)
+#app.include_router(entes.router)
 app.include_router(ente_tipo.router)
 app.include_router(servidores_publicos.router)
 app.include_router(servidor_publico.router)
@@ -80,6 +80,7 @@ app.include_router(entes_usuario.router)
 app.include_router(tipo_evento.router)
 app.include_router(auxiliares.router)
 app.include_router(proceso_seguimiento_presupuesto_rubro_ente.router)
+
 
 # =======================================================
 # 🔍 Endpoint raíz para verificación
