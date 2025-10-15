@@ -38,6 +38,7 @@ origins = [
     "http://127.0.0.1:3000",
     "https://my-dashboard-production-ecd1.up.railway.app",
     "https://my-dashboard-production-cd1a.up.railway.app",
+    "https://my-dashboard-db1o.onrender.com",
 ]
 
 app.add_middleware(
