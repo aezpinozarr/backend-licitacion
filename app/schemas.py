@@ -487,3 +487,30 @@ class ProcesoPartidaRubroProveedorEnteIn(BaseModel):
     p_e_rfc_proveedor: str
     p_e_importe_sin_iva: float
     p_e_importe_total: float
+
+
+# ============================
+# 📘 SCHEMA: sp_add_remove_rubro
+# ============================
+
+class RubroRequest(BaseModel):
+    p_accion: str                 # "NUEVO" o "ELIMINAR"
+    p_id_seguimiento_partida: int
+    p_id: Optional[int] = None    # Solo se usa en ELIMINAR
+    p_e_id_rubro: Optional[str] = "0"
+    p_e_monto_presupuesto_suficiencia: Optional[float] = 0.0
+
+
+
+# ============================
+# 📘 SCHEMA: SP V2 PROVEEDOR
+# ============================
+
+
+class ProveedorRubroRequest(BaseModel):
+    p_accion: str
+    p_id_seguimiento_partida_rubro: int
+    p_id: Optional[int] = None
+    p_e_rfc_proveedor: Optional[str] = None
+    p_e_importe_sin_iva: Optional[float] = None
+    p_e_importe_total: Optional[float] = None
