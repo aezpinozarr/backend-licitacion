@@ -432,10 +432,14 @@ class UsuarioOut(BaseModel):
 # Seguimiento de procesos
 # =========================
 
+
+# ===========================================================
+# 🟢 Proceso Seguimiento - Ente
+# ===========================================================
 class ProcesoSeguimientoEnteIn(BaseModel):
     p_accion: str = Field(..., description="'NUEVO' o 'EDITAR'")
     p_id: Optional[int] = None
-    p_e_id_ente: int  # ✅ CAMBIAR de str → int
+    p_e_id_ente: str  # ✅ debe ser texto
     p_e_oficio_invitacion: str
     p_e_id_servidor_publico_emite: int
     p_e_servidor_publico_cargo: str
@@ -449,43 +453,37 @@ class ProcesoSeguimientoEnteIn(BaseModel):
         from_attributes = True
 
 
-class ProcesoPresupuestoEnteIn(BaseModel):
+# ===========================================================
+# 🟡 Proceso Seguimiento - Partida Ente
+# ===========================================================
+class ProcesoPartidaEnteIn(BaseModel):
     p_accion: str
-    p_id_proceso_seguimiento: int
+    p_id_seguimiento: int
     p_id: Optional[int] = None
     p_e_no_requisicion: str
     p_e_id_partida: str
     p_e_id_fuente_financiamiento: str
-    p_e_monto_presupuesto_suficiencia: float
+    # 🚫 Eliminado p_e_monto_presupuesto_suficiencia
 
-class ProcesoPresupuestoRubroEnteIn(BaseModel):
+
+# ===========================================================
+# 🟠 Proceso Seguimiento - Partida Rubro Ente
+# ===========================================================
+class ProcesoPartidaRubroEnteIn(BaseModel):
     p_accion: str
-    p_id_proceso_seguimiento_presupuesto: int
+    p_id_seguimiento_partida: int  # ✅ nombre correcto según el SP
     p_id: Optional[int] = 0
     p_e_id_rubro: str
     p_e_monto_presupuesto_suficiencia: float
 
-class ProcesoPresupuestoProveedorIn(BaseModel):
+
+# ===========================================================
+# 🔴 Proceso Seguimiento - Partida Rubro Proveedor Ente
+# ===========================================================
+class ProcesoPartidaRubroProveedorEnteIn(BaseModel):
     p_accion: str
-    p_id_proceso_seguimiento_presupuesto: int
-    p_id_proceso_seguimiento_presupuesto_rubro: Optional[int] = None  # ✅ <-- agregar este campo
+    p_id_seguimiento_partida: int  # 👈 nombre corregido
     p_id: Optional[int] = 0
     p_e_rfc_proveedor: str
     p_e_importe_sin_iva: float
     p_e_importe_total: float
-    p_r_importe_ajustado_sin_iva: Optional[float] = 0.0
-    p_r_importe_ajustado_total: Optional[float] = 0.0
-
-
-class ProcesoPresupuestoRubroProveedorEnteIn(BaseModel):
-    p_accion: str
-    p_id_proceso_seguimiento_presupuesto_rubro: int
-    p_id: Optional[int] = 0
-    p_e_rfc_proveedor: str
-    p_e_importe_sin_iva: float
-    p_e_importe_total: float
-    p_r_importe_ajustado_sin_iva: float
-    p_r_importe_ajustado_total: float
-
-    class Config:
-        from_attributes = True

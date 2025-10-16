@@ -7,22 +7,23 @@ from app.routers import (
     clientes, catalogos, sesiones, sesiones_fuentes, sesiones_fechas,
     sesiones_entregables, entes, ente_tipo, servidores_publicos, servidor_publico,
     sesiones_fechas_pivot, ente_servidor_publico, rubro, proveedor, entidad_federativa, usuarios,
-    proceso_seguimiento_ente, proceso_seguimiento_presupuesto_ente, proceso_seguimiento_presupuesto_proveedor_ente,
+    proceso_seguimiento_ente, proceso_seguimiento_partida_ente, proceso_seguimiento_partida_rubro_ente,
+    proceso_seguimiento_partida_rubro_proveedor_ente,
     catalogos_ente, catalogos_servidor_publico, catalogos_sesion_numero, proceso_enum_tipo_licitacion, partidas,
-    fuentes_financiamiento, presupuesto_proveedor, entes_usuario, tipo_evento, auxiliares, proceso_seguimiento_presupuesto_rubro_ente,
-    procesos, proceso_detalle
+    fuentes_financiamiento, presupuesto_proveedor, entes_usuario, tipo_evento, auxiliares, procesos, proceso_detalle,
+    vista_seguimiento_partida_rubro_proveedor_ente
 )
 
 # =======================================================
 # 🚀 Configuración principal
 # =======================================================
-app = FastAPI(title="Backend Licitación", version="1.0")
+app = FastAPI(title="Backend Licitación", version="1.1")
 
 # =======================================================
 # ⚙️ Middleware de seguridad
 # =======================================================
-# ❌ No forzamos redirecciones, Railway ya usa HTTPS a nivel de proxy.
-# ✅ Agregamos cabeceras de seguridad para evitar advertencias del navegador.
+# ❌ No forzamos redirecciones (Railway/Render ya usan HTTPS a nivel proxy)
+# ✅ Añadimos cabeceras de seguridad
 @app.middleware("http")
 async def enforce_https_headers(request, call_next):
     response = await call_next(request)
@@ -58,7 +59,7 @@ app.include_router(sesiones.router)
 app.include_router(sesiones_fuentes.router)
 app.include_router(sesiones_fechas.router)
 app.include_router(sesiones_entregables.router)
-#app.include_router(entes.router)
+# app.include_router(entes.router)  # Si lo tienes temporalmente desactivado, déjalo así
 app.include_router(ente_tipo.router)
 app.include_router(servidores_publicos.router)
 app.include_router(servidor_publico.router)
@@ -68,9 +69,15 @@ app.include_router(rubro.router)
 app.include_router(proveedor.router)
 app.include_router(entidad_federativa.router)
 app.include_router(usuarios.router)
+
+# === 🔹 Nuevos endpoints ajustados a los SP actuales ===
 app.include_router(proceso_seguimiento_ente.router)
-app.include_router(proceso_seguimiento_presupuesto_ente.router)
-app.include_router(proceso_seguimiento_presupuesto_proveedor_ente.router)
+app.include_router(proceso_seguimiento_partida_ente.router)
+app.include_router(proceso_seguimiento_partida_rubro_ente.router)
+app.include_router(proceso_seguimiento_partida_rubro_proveedor_ente.router)
+app.include_router(vista_seguimiento_partida_rubro_proveedor_ente.router)
+
+# === 🔹 Otros catálogos y utilidades ===
 app.include_router(catalogos_ente.router)
 app.include_router(catalogos_servidor_publico.router)
 app.include_router(catalogos_sesion_numero.router)
@@ -81,9 +88,9 @@ app.include_router(presupuesto_proveedor.router)
 app.include_router(entes_usuario.router)
 app.include_router(tipo_evento.router)
 app.include_router(auxiliares.router)
-app.include_router(proceso_seguimiento_presupuesto_rubro_ente.router)
 app.include_router(procesos.router)
 app.include_router(proceso_detalle.router)
+
 # =======================================================
 # 🔍 Endpoint raíz para verificación
 # =======================================================
