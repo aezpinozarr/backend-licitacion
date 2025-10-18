@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException
+# app/routers/proceso_detalle.py
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from app.db import get_db
@@ -9,21 +10,22 @@ router = APIRouter(
 )
 
 @router.get("/detalle/")
-def obtener_detalle_seguimiento(p_id: int, db: Session = Depends(get_db)):
+def obtener_detalle_seguimiento(
+    p_id: int = Query(..., description="ID del proceso de seguimiento"),
+    db: Session = Depends(get_db)
+):
     """
     🔹 Devuelve toda la información de un proceso (de los 4 pasos)
-    a partir de la vista unificada v_seguimiento_y_presupuesto_y_rubro_y_proveedor.
+    a partir de la vista unificada v_seguimiento_y_partida_y_rubro_y_proveedor.
     """
     try:
-        # ✅ Consulta envuelta con text()
         query = text("""
             SELECT *
-            FROM procesos.v_seguimiento_y_presupuesto_y_rubro_y_proveedor
-            WHERE id = :id
+            FROM procesos.v_seguimiento_y_partida_y_rubro_y_proveedor
+            WHERE id = :p_id
         """)
 
-        # ✅ Ejecutar query con parámetro
-        result = db.execute(query, {"id": p_id}).fetchall()
+        result = db.execute(query, {"p_id": p_id}).fetchall()
 
         if not result:
             raise HTTPException(
@@ -31,7 +33,6 @@ def obtener_detalle_seguimiento(p_id: int, db: Session = Depends(get_db)):
                 detail=f"No se encontraron registros para el proceso con id {p_id}"
             )
 
-        # ✅ Convertir resultado a lista de diccionarios (para JSON)
         data = [dict(row._mapping) for row in result]
 
         return {
@@ -41,6 +42,7 @@ def obtener_detalle_seguimiento(p_id: int, db: Session = Depends(get_db)):
         }
 
     except Exception as e:
+        print("❌ Error al obtener detalle de proceso:", e)
         raise HTTPException(
             status_code=500,
             detail=f"Error al obtener el detalle del proceso: {str(e)}"

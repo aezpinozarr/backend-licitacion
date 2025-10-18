@@ -16,10 +16,10 @@ def obtener_detalle_seguimiento(
 ):
     try:
         query = text("""
-            SELECT *
-            FROM procesos.v_seguimiento_y_presupuesto_y_rubro_y_proveedor
-            WHERE id = :p_id
-        """)
+    SELECT *
+    FROM procesos.v_seguimiento_y_partida_y_rubro_y_proveedor
+    WHERE id = :p_id
+""")
         result = db.execute(query, {"p_id": p_id}).fetchall()
 
         if not result:

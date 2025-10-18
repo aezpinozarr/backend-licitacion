@@ -11,7 +11,7 @@ router = APIRouter(
 )
 
 # ===========================
-# ✅ Obtener datos de la vista v_proceso_seguimiento_presupuesto_proveedor
+# ✅ Obtener datos de la vista v_seguimiento_y_partida_y_rubro_y_proveedor
 # ===========================
 @router.get("/presupuesto-proveedor/")
 def get_presupuesto_proveedor(
@@ -19,13 +19,13 @@ def get_presupuesto_proveedor(
     db: Session = Depends(get_db)
 ):
     """
-    Devuelve información consolidada de la vista v_proceso_seguimiento_presupuesto_proveedor.
+    Devuelve información consolidada de la vista v_seguimiento_y_partida_y_rubro_y_proveedor.
     Incluye datos del ente, presupuesto y proveedor asociados al proceso.
     """
     try:
         query = text("""
             SELECT *
-            FROM procesos.v_seguimiento_y_presupuesto_y_rubro_y_proveedor
+            FROM procesos.v_seguimiento_y_partida_y_rubro_y_proveedor
             WHERE id = :p_id_proceso
             ORDER BY pp_id;
         """)
@@ -55,13 +55,13 @@ def get_presupuesto_proveedor(
 def list_presupuestos_proveedor(db: Session = Depends(get_db)):
     """
     Devuelve todos los registros disponibles en la vista
-    v_proceso_seguimiento_presupuesto_proveedor.
+    v_seguimiento_y_partida_y_rubro_y_proveedor.
     Ideal para listados generales o reportes.
     """
     try:
         query = text("""
             SELECT *
-            FROM procesos.v_seguimiento_y_presupuesto_y_rubro_y_proveedor
+            FROM procesos.v_seguimiento_y_partida_y_rubro_y_proveedor
             ORDER BY id DESC;
         """)
         result = db.execute(query).fetchall()
@@ -95,7 +95,7 @@ def list_presupuestos_proveedor_por_ente(
 
         query = text("""
             SELECT *
-            FROM procesos.v_seguimiento_y_presupuesto_y_rubro_y_proveedor
+            FROM procesos.v_seguimiento_y_partida_y_rubro_y_proveedor
             WHERE e_id_ente::text = CAST(:p_id_ente AS text)
             ORDER BY id DESC;
         """)
