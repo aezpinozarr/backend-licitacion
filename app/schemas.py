@@ -514,3 +514,20 @@ class ProveedorRubroRequest(BaseModel):
     p_e_rfc_proveedor: Optional[str] = None
     p_e_importe_sin_iva: Optional[float] = None
     p_e_importe_total: Optional[float] = None
+
+
+
+# ============================
+# 📘 CAPTURA RECTOR 
+# ============================
+
+
+class RectorCaptura(BaseModel):
+    p_accion: str
+    p_r_suplencia_oficio_no: Optional[str] = None
+    p_r_fecha_emision: Optional[str] = None
+    p_r_asunto: Optional[str] = None
+    p_r_fecha_y_hora_reunion: Optional[str] = None
+    p_r_estatus: Optional[str] = None
+    p_r_id_usuario_registra: int
+    p_r_id_servidor_publico_asiste: Optional[int] = None

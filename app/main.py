@@ -11,7 +11,7 @@ from app.routers import (
     proceso_seguimiento_partida_rubro_proveedor_ente,
     catalogos_ente, catalogos_servidor_publico, catalogos_sesion_numero, proceso_enum_tipo_licitacion, partidas,
     fuentes_financiamiento, presupuesto_proveedor, entes_usuario, tipo_evento, auxiliares, procesos, proceso_detalle,
-    vista_seguimiento_partida_rubro_proveedor_ente, sp_add_remove_rubro, procesos_proveedor_rubro_v2
+    vista_seguimiento_partida_rubro_proveedor_ente, sp_add_remove_rubro, procesos_proveedor_rubro_v2, rector
 )
 
 # =======================================================
@@ -78,6 +78,7 @@ app.include_router(proceso_seguimiento_partida_rubro_proveedor_ente.router)
 app.include_router(vista_seguimiento_partida_rubro_proveedor_ente.router)
 app.include_router(sp_add_remove_rubro.router)
 app.include_router(procesos_proveedor_rubro_v2.router)
+app.include_router(rector.router)
 
 # === 🔹 Otros catálogos y utilidades ===
 app.include_router(catalogos_ente.router)
