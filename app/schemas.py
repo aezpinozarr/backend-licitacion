@@ -521,13 +521,30 @@ class ProveedorRubroRequest(BaseModel):
 # 📘 CAPTURA RECTOR 
 # ============================
 
-
-class RectorCaptura(BaseModel):
+class RectorGestionIn(BaseModel):
     p_accion: str
-    p_r_suplencia_oficio_no: Optional[str] = None
-    p_r_fecha_emision: Optional[str] = None
-    p_r_asunto: Optional[str] = None
-    p_r_fecha_y_hora_reunion: Optional[str] = None
-    p_r_estatus: Optional[str] = None
+    p_r_suplencia_oficio_no: str
+    p_r_fecha_emision: date
+    p_r_asunto: str
+    p_r_fecha_y_hora_reunion: datetime
+    p_r_estatus: str
     p_r_id_usuario_registra: int
-    p_r_id_servidor_publico_asiste: Optional[int] = None
+    p_r_id_servidor_publico_asiste: int
+    p_r_observaciones: Optional[str] = None
+    p_r_con_observaciones: Optional[bool] = False
+
+
+
+# ============================
+# PROVEEDOR ADJUDICADO 
+# ============================
+
+
+class SpRectorSeguimientoGestionProveedorAdjudicado(BaseModel):
+    p_estatus: str
+    p_id_seguimiento_partida_rubro: int
+    p_id_seguimiento_partida_rubro_proveedor: Optional[int] = 0
+    p_id: Optional[int] = None
+    p_importe_ajustado_sin_iva: Optional[float] = 0
+    p_importe_ajustado_total: Optional[float] = 0
+    p_id_fundamento: Optional[int] = 0

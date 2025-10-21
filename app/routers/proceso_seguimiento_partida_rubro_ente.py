@@ -15,12 +15,12 @@ router = APIRouter(
 @router.post("/", response_model=dict)
 def gestionar_partida_rubro_ente(data: schemas.ProcesoPartidaRubroEnteIn, db: Session = Depends(get_db)):
     """
-    Llama al SP procesos.sp_seguimiento_partida_rubro_ente_captura
+    Llama al SP procesos.sp_ente_seguimiento_partida_rubro_captura
     para crear o editar el rubro de una partida.
     """
     try:
         query = text("""
-            SELECT procesos.sp_seguimiento_partida_rubro_ente_captura(
+            SELECT procesos.sp_ente_seguimiento_partida_rubro_captura(
                 :p_accion,
                 :p_id_seguimiento_partida,
                 :p_id,

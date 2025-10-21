@@ -20,7 +20,7 @@ def ejecutar_sp_proveedor_rubro_v2(req: ProveedorRubroRequest, db: Session = Dep
     """
     try:
         query = text("""
-            SELECT procesos.sp_seguimiento_partida_rubro_proveedor_ente_capturav2(
+            SELECT procesos.sp_ente_seguimiento_partida_rubro_proveedor_captura(
                 :p_accion,
                 :p_id_seguimiento_partida_rubro,
                 :p_id,

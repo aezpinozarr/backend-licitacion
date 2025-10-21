@@ -19,12 +19,12 @@ router = APIRouter(
 @router.post("/")
 def ejecutar_sp_rubro_v2(req: RubroRequest, db: Session = Depends(get_db)):
     """
-    Llama al SP procesos.sp_seguimiento_partida_rubro_ente_captura_v2
+    Llama al SP procesos.sp_ente_seguimiento_partida_rubro_captura
     para crear o eliminar un rubro dentro de una partida.
     """
     try:
         query = text("""
-            SELECT procesos.sp_seguimiento_partida_rubro_ente_captura_v2(
+            SELECT procesos.sp_ente_seguimiento_partida_rubro_captura(
                 :p_accion,
                 :p_id_seguimiento_partida,
                 :p_id,

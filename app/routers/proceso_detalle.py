@@ -10,7 +10,7 @@ router = APIRouter(
 )
 
 @router.get("/detalle/")
-def obtener_detalle_seguimiento(
+def obtener_detalle_proceso(
     p_id: int = Query(..., description="ID del proceso de seguimiento"),
     db: Session = Depends(get_db)
 ):
