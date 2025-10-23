@@ -16,7 +16,7 @@ def get_rector_detalle(
     db: Session = Depends(get_db),
 ):
     """
-    Llama al SP procesos.sp_rector_seguimiento_detallev1 para obtener los detalles
+    Llama al SP procesos.sp_rector_seguimiento_detallev6 para obtener los detalles
     completos del seguimiento con sus partidas, rubros y proveedores.
     """
     try:
@@ -24,7 +24,7 @@ def get_rector_detalle(
         proceso_id = p_id_proceso if p_id_proceso != -99 else p_id
 
         result = db.execute(
-            text("SELECT * FROM procesos.sp_rector_seguimiento_detallev1(:p_id, :p_id_ente)"),
+            text("SELECT * FROM procesos.sp_rector_seguimiento_detallev6(:p_id, :p_id_ente)"),
             {"p_id": proceso_id, "p_id_ente": p_id_ente}
         ).mappings().all()
 
