@@ -548,3 +548,16 @@ class SpRectorSeguimientoGestionProveedorAdjudicado(BaseModel):
     p_importe_ajustado_sin_iva: Optional[float] = 0
     p_importe_ajustado_total: Optional[float] = 0
     p_id_fundamento: Optional[int] = 0
+
+
+
+# ============================
+# DESHACER PROVEEDOR ADJUDICADO 
+# ============================
+
+class DeshacerAdjudicacionRequest(BaseModel):
+    p_id: int
+
+
+class DeshacerAdjudicacionResponse(BaseModel):
+    resultado: int
