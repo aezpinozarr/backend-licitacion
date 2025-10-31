@@ -131,33 +131,23 @@ def autenticar_usuario(data: schemas.UsuarioLogin, db: Session = Depends(get_db)
     """
     try:
         query = text("""
-            SELECT * FROM seguridad.sp_usuarios_autenticar(:p_username, :p_password)
+            SELECT seguridad.sp_usuarios_autenticar(:p_username, :p_password)
         """)
         result = db.execute(query, {
             "p_username": data.p_username,
             "p_password": data.p_password
-        }).mappings().first()
+        }).scalar()  # ✅ Se usa scalar() para leer JSON correctamente
+
+        print("✅ Resultado autenticación:", result)
 
         if not result:
             raise HTTPException(status_code=401, detail="Usuario o contraseña incorrectos")
 
-        if not result["exito"]:
-            raise HTTPException(status_code=401, detail=result["mensaje"])
-
-        # ✅ Ajuste para coincidir con el frontend
-        return {
-            "exito": result["exito"],
-            "mensaje": result["mensaje"],
-            "id": result["id"],
-            "username": result["username"],
-            "nombre": result["nombre"],
-            "id_ente": result["id_ente"],
-            "tipo": result["tipo"],
-        }
+        return result  # ✅ Devuelve directamente el JSON del SP
 
     except Exception as e:
         print("❌ Error al autenticar usuario:", e)
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail="Error de autenticación")
 
 
 # ===========================================
