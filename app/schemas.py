@@ -561,3 +561,12 @@ class DeshacerAdjudicacionRequest(BaseModel):
 
 class DeshacerAdjudicacionResponse(BaseModel):
     resultado: int
+
+
+# ======================================
+# CAMBIAR CONTRASEÑA USUARIO AUTENTICADO  
+# ======================================
+
+class CambiarPassword(BaseModel):
+    p_password_actual: Optional[str] = None
+    p_password_nueva: str

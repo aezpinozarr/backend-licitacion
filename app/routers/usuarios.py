@@ -159,6 +159,57 @@ def autenticar_usuario(data: schemas.UsuarioLogin, db: Session = Depends(get_db)
     except Exception as e:
         print("❌ Error al autenticar usuario:", e)
         raise HTTPException(status_code=500, detail="Error de autenticación")
+    
+
+# ===========================================
+# 🔹 Cambiar contraseña del usuario logueado
+# ===========================================
+from fastapi import Body
+
+@router.put("/cambiar-password/{id}", response_model=dict)
+def cambiar_password(
+    id: int,
+    data: dict = Body(...),
+    db: Session = Depends(get_db)
+):
+    """
+    Cambia la contraseña de un usuario validando su contraseña actual.
+    Llama al SP seguridad.sp_usuarios_gestionar_contrasena.
+    """
+    try:
+        p_password_actual = data.get("p_password_actual")
+        p_password_nueva = data.get("p_password_nueva")
+
+        if not p_password_actual or not p_password_nueva:
+            raise HTTPException(status_code=400, detail="Debe proporcionar ambas contraseñas")
+
+        query = text("""
+            SELECT seguridad.sp_usuarios_gestionar_contrasena(:p_id, :p_password_actual, :p_password_nueva)
+        """)
+
+        result = db.execute(query, {
+            "p_id": id,
+            "p_password_actual": p_password_actual,
+            "p_password_nueva": p_password_nueva
+        }).scalar()
+
+        db.commit()
+
+        # 🔍 Evaluar respuesta del SP
+        if result == 1:
+            return {"mensaje": "✅ Contraseña actualizada correctamente"}
+        elif result == -1:
+            raise HTTPException(status_code=401, detail="Contraseña actual incorrecta")
+        elif result == 0:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        else:
+            raise HTTPException(status_code=400, detail="No se pudo actualizar la contraseña")
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        print("❌ Error al cambiar contraseña:", e)
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 # ===========================================
@@ -221,3 +272,28 @@ def obtener_usuario_por_id(id: int, db: Session = Depends(get_db)):
     except Exception as e:
         print("❌ Error al obtener usuario:", e)
         raise HTTPException(status_code=500, detail="Error al obtener usuario")
+    
+
+# ===========================================
+# 🔹 Cambiar contraseña (usuario autenticado)
+# ===========================================
+@router.put("/cambiar-password/{id}", response_model=dict)
+def cambiar_password(id: int, data: schemas.CambiarPassword, db: Session = Depends(get_db)):
+    """
+    Cambia la contraseña de un usuario sin alterar otros campos.
+    """
+    try:
+        query = text("""
+            SELECT seguridad.sp_usuarios_gestionar_contrasena(:p_id, NULL, :p_pass_hash)
+        """)
+        result = db.execute(query, {"p_id": id, "p_pass_hash": data.p_password_nueva}).scalar()
+        db.commit()
+
+        if result == 1:
+            return {"mensaje": "✅ Contraseña actualizada correctamente"}
+        else:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    except Exception as e:
+        print("❌ Error al cambiar contraseña:", e)
+        raise HTTPException(status_code=500, detail=str(e))
