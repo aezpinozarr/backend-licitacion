@@ -14,7 +14,8 @@ router = APIRouter(
 @router.get("/")
 def obtener_partidas(
     p_id: str = Query("-99", description="ID de la partida (-99 para todas)"),
-    p_id_capitulo: str = Query("-99", description="ID del capítulo (-99 para todos)"),
+    p_id_capitulo: str = Query("-99", description="ID del capítulo (-99 para todas)"),
+    p_tipo: str = Query("-99", description="Tipo de partida (ej. 'PROVEEDURIA')"),
     db: Session = Depends(get_db)
 ):
     """
@@ -23,13 +24,14 @@ def obtener_partidas(
     """
     try:
         query = text("""
-            SELECT * FROM catalogos.sp_cat_partida(:p_id, :p_id_capitulo)
+            SELECT * FROM catalogos.sp_cat_partida(:p_id, :p_id_capitulo, :p_tipo)
         """)
-        result = db.execute(query, {"p_id": p_id, "p_id_capitulo": p_id_capitulo}).mappings().all()
+        result = db.execute(
+            query,
+            {"p_id": p_id, "p_id_capitulo": p_id_capitulo, "p_tipo": p_tipo}
+        ).mappings().all()
 
-        # Convertir resultado a lista de diccionarios
-        partidas = [dict(row) for row in result]
-        return partidas
+        return [dict(row) for row in result]
 
     except Exception as e:
         print("❌ Error al obtener partidas:", e)
