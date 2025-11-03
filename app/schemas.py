@@ -402,12 +402,12 @@ class UsuarioCreate(BaseModel):
 # 🔹 Editar usuario
 # =======================
 class UsuarioUpdate(BaseModel):
-    p_id: int
-    p_username: str
-    p_nombre: str
+    username: str
+    nombre: str
+    tipo: str
+    activo: bool = True
+    p_id_ente: Optional[str] = None
     p_pass_hash: Optional[str] = None
-    p_id_ente: str
-    p_tipo: str
 
 
 # =======================
@@ -427,7 +427,7 @@ class UsuarioOut(BaseModel):
     nombre: Optional[str] = None
     tipo: Optional[str] = None
     activo: bool
-
+    id_ente: Optional[str] = None  # ✅ agregado
 # =========================
 # Seguimiento de procesos
 # =========================

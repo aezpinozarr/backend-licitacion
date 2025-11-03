@@ -40,12 +40,21 @@ def crear_usuario(data: schemas.UsuarioCreate, db: Session = Depends(get_db)):
 # ===========================================
 # 🔹 Editar usuario
 # ===========================================
-@router.put("/", response_model=dict)
-def editar_usuario(data: schemas.UsuarioUpdate, db: Session = Depends(get_db)):
+@router.put("/{id}", response_model=dict)
+def editar_usuario(id: int, data: schemas.UsuarioUpdate, db: Session = Depends(get_db)):
     """
     Edita un usuario existente usando el SP seguridad.sp_usuarios_gestionar()
     """
     try:
+        params = {
+            "p_id": id,
+            "p_username": data.username,
+            "p_nombre": data.nombre,
+            "p_pass_hash": data.p_pass_hash,
+            "p_id_ente": data.p_id_ente,
+            "p_tipo": data.tipo,
+        }
+
         query = text("""
             SELECT seguridad.sp_usuarios_gestionar(
                 'EDITAR', :p_id, :p_username, :p_nombre,
@@ -53,13 +62,15 @@ def editar_usuario(data: schemas.UsuarioUpdate, db: Session = Depends(get_db)):
                 :p_id_ente, :p_tipo, TRUE
             )
         """)
-        result = db.execute(query, data.dict()).scalar()
+
+        result = db.execute(query, params).scalar()
         db.commit()
 
         if not result:
             raise HTTPException(status_code=404, detail="Usuario no encontrado")
 
         return {"resultado": result, "mensaje": "✏️ Usuario actualizado correctamente"}
+
     except Exception as e:
         print("❌ Error al editar usuario:", e)
         raise HTTPException(status_code=500, detail=str(e))
@@ -167,7 +178,7 @@ def obtener_tipos_usuario(db: Session = Depends(get_db)):
 
 
 # ===========================================
-# 🔹 Listar usuarios activos
+# 🔹 Listar usuarios activos (✅ corregido)
 # ===========================================
 @router.get("/", response_model=list[schemas.UsuarioOut])
 def obtener_usuarios(db: Session = Depends(get_db)):
@@ -176,7 +187,7 @@ def obtener_usuarios(db: Session = Depends(get_db)):
     """
     try:
         rows = db.execute(text("""
-            SELECT id, username, nombre, tipo, COALESCE(activo, true) AS activo
+            SELECT id, username, nombre, tipo, id_ente, COALESCE(activo, true) AS activo
             FROM seguridad.usuarios
             WHERE activo IS TRUE
             ORDER BY id

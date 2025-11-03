@@ -14,7 +14,8 @@ from app.routers import (
     vista_seguimiento_partida_rubro_proveedor_ente, sp_add_remove_rubro, procesos_proveedor_rubro_v2,
     sp_rector_seguimiento_detalle,sp_rector_seguimiento_gestion,sp_rector_seguimiento_preregistrados,
     sp_cat_fundamiento, sp_enum_seguimiento_partida_rubro_estatus, sp_rector_seguimiento_gestion_proveedor_adjudicado,
-    verificar_adjudicado, reporte_adjudicado, sp_rector_seg_partida_rubro_proveedor_adjudicado_deshacer,notificaciones
+    verificar_adjudicado, reporte_adjudicado, sp_rector_seg_partida_rubro_proveedor_adjudicado_deshacer,notificaciones,
+    sp_ente_seguimiento, sp_rector_seguimiento_detalle_v1
 )
 
 # =======================================================
@@ -90,7 +91,8 @@ app.include_router(sp_rector_seguimiento_gestion_proveedor_adjudicado.router)
 app.include_router(verificar_adjudicado.router)
 app.include_router(reporte_adjudicado.router)
 app.include_router(notificaciones.router)
-
+app.include_router(sp_ente_seguimiento.router)
+app.include_router(sp_rector_seguimiento_detalle_v1.router)
 # === 🔹 Otros catálogos y utilidades ===
 app.include_router(catalogos_ente.router)
 app.include_router(catalogos_servidor_publico.router)

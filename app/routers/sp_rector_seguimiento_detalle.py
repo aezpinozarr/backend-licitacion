@@ -24,7 +24,7 @@ def get_rector_detalle(
         proceso_id = p_id_proceso if p_id_proceso != -99 else p_id
 
         result = db.execute(
-            text("SELECT * FROM procesos.sp_rector_seguimiento_detallev6(:p_id, :p_id_ente)"),
+            text("SELECT * FROM procesos.sp_rector_seguimiento_detallev6_old(:p_id, :p_id_ente)"),
             {"p_id": proceso_id, "p_id_ente": p_id_ente}
         ).mappings().all()
 
