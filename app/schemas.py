@@ -570,3 +570,85 @@ class DeshacerAdjudicacionResponse(BaseModel):
 class CambiarPassword(BaseModel):
     p_password_actual: Optional[str] = None
     p_password_nueva: str
+
+
+# ===========================================
+# GESTIONAR SERVIDOR PÚBLICO AL ENTE, PASO 1
+# ===========================================
+
+class EnteServidorPublicoResponse(BaseModel):
+    resultado: str
+    id_servidor_publico: Optional[int] = None
+    id_ente: Optional[int] = None
+    nombre: Optional[str] = None
+    cargo: Optional[str] = None
+    detalle: Optional[str] = None
+
+
+
+
+# ======================================
+# 🔹 Schema: Editar seguimiento (Paso 1)
+# ======================================
+class EnteSeguimientoUpdate(BaseModel):
+    p_id: int
+    p_e_id_ente: str
+    p_e_oficio_invitacion: Optional[str] = ""
+    p_e_id_servidor_publico_emite: Optional[int] = 0
+    p_e_servidor_publico_cargo: Optional[str] = ""
+    p_e_tipo_licitacion: Optional[str] = ""
+    p_e_tipo_licitacion_no_veces: Optional[int] = 0
+    p_e_tipo_licitacion_notas: Optional[str] = ""
+    p_e_fecha_y_hora_reunion: Optional[str] = None
+    p_e_id_usuario_registra: Optional[int] = 0
+
+    class Config:
+         from_attributes = True
+
+
+
+# ======================================
+# 🔹 Schema: Editar Partida (Paso 2)
+# ======================================
+
+class EnteSeguimientoPartidaUpdate(BaseModel):
+    p_id_seguimiento: int
+    p_id: Optional[int] = None
+    p_e_no_requisicion: Optional[str] = ""
+    p_e_id_partida: Optional[str] = "0"
+    p_e_id_fuente_financiamiento: Optional[str] = "0"
+
+    class Config:
+        from_attributes = True
+
+
+# ======================================
+# 🔹 Schema: Editar Rubro (Paso 3)
+# ======================================
+
+
+class EnteSeguimientoPartidaRubroUpdate(BaseModel):
+    p_id_seguimiento_partida: int
+    p_id: Optional[int] = None
+    p_e_id_rubro: Optional[str] = "0"
+    p_e_monto_presupuesto_suficiencia: Optional[float] = 0.0
+    p_accion: Optional[str] = "NUEVO"  # Puede ser NUEVO o ELIMINAR
+
+    class Config:
+        from_attributes = True
+
+
+# ======================================
+# 🔹 Schema: Editar Proveedor (Paso 4)
+# ======================================
+
+class EnteSeguimientoPartidaRubroProveedorUpdate(BaseModel):
+    p_id_seguimiento_partida_rubro: int
+    p_id: Optional[int] = None
+    p_e_rfc_proveedor: Optional[str] = None
+    p_e_importe_sin_iva: Optional[float] = None
+    p_e_importe_total: Optional[float] = None
+    p_accion: Optional[str] = "NUEVO"  # Puede ser NUEVO o ELIMINAR
+
+    class Config:
+        from_attributes = True

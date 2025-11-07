@@ -277,8 +277,8 @@ def obtener_usuario_por_id(id: int, db: Session = Depends(get_db)):
 # ===========================================
 # 🔹 Cambiar contraseña (usuario autenticado)
 # ===========================================
-@router.put("/cambiar-password/{id}", response_model=dict)
-def cambiar_password(id: int, data: schemas.CambiarPassword, db: Session = Depends(get_db)):
+@router.put("/cambiar-password-directo/{id}", response_model=dict)
+def cambiar_password_directo(id: int, data: schemas.CambiarPassword, db: Session = Depends(get_db)):
     """
     Cambia la contraseña de un usuario sin alterar otros campos.
     """

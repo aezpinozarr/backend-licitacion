@@ -5,7 +5,7 @@ import os
 
 from app.routers import (
     clientes, catalogos, sesiones, sesiones_fuentes, sesiones_fechas,
-    sesiones_entregables, entes, ente_tipo, servidores_publicos, servidor_publico,
+    sesiones_entregables, ente_tipo, servidores_publicos, servidor_publico,
     sesiones_fechas_pivot, ente_servidor_publico, rubro, proveedor, entidad_federativa, usuarios,
     proceso_seguimiento_ente, proceso_seguimiento_partida_ente, proceso_seguimiento_partida_rubro_ente,
     proceso_seguimiento_partida_rubro_proveedor_ente,
@@ -15,8 +15,12 @@ from app.routers import (
     sp_rector_seguimiento_detalle,sp_rector_seguimiento_gestion,sp_rector_seguimiento_preregistrados,
     sp_cat_fundamiento, sp_enum_seguimiento_partida_rubro_estatus, sp_rector_seguimiento_gestion_proveedor_adjudicado,
     verificar_adjudicado, reporte_adjudicado, sp_rector_seg_partida_rubro_proveedor_adjudicado_deshacer,notificaciones,
-    sp_ente_seguimiento, sp_rector_seguimiento_detalle_v1
+    sp_ente_seguimiento, sp_rector_seguimiento_detalle_v1, sp_ente_seguimiento_partida, sp_ente_y_servidor_publico_gestionar_ambos,
 )
+
+from app.routers.procesos_editar import ( sp_seguimiento, sp_seguimiento_partida, sp_seguimiento_partida_rubro,
+sp_seguimiento_partida_rubro_proveedor, sp_ente_seguimiento_captura, sp_ente_seguimiento_partida_captura, 
+sp_ente_seguimiento_partida_rubro_captura, sp_ente_seguimiento_partida_rubro_proveedor_captura)
 
 # =======================================================
 # 🚀 Configuración principal
@@ -63,7 +67,6 @@ app.include_router(sesiones.router)
 app.include_router(sesiones_fuentes.router)
 app.include_router(sesiones_fechas.router)
 app.include_router(sesiones_entregables.router)
-# app.include_router(entes.router)  # Si lo tienes temporalmente desactivado, déjalo así
 app.include_router(ente_tipo.router)
 app.include_router(servidores_publicos.router)
 app.include_router(servidor_publico.router)
@@ -93,6 +96,7 @@ app.include_router(reporte_adjudicado.router)
 app.include_router(notificaciones.router)
 app.include_router(sp_ente_seguimiento.router)
 app.include_router(sp_rector_seguimiento_detalle_v1.router)
+app.include_router(sp_ente_y_servidor_publico_gestionar_ambos.router)
 # === 🔹 Otros catálogos y utilidades ===
 app.include_router(catalogos_ente.router)
 app.include_router(catalogos_servidor_publico.router)
@@ -107,7 +111,19 @@ app.include_router(auxiliares.router)
 app.include_router(procesos.router)
 app.include_router(proceso_detalle.router)
 app.include_router(sp_rector_seg_partida_rubro_proveedor_adjudicado_deshacer.router)
+app.include_router(sp_ente_seguimiento_partida.router)
 
+# ======================================================
+# EDITAR PROCESOS ---- > FORMULARIO 4 PASOS.
+# ======================================================
+app.include_router(sp_seguimiento.router)
+app.include_router(sp_seguimiento_partida.router)
+app.include_router(sp_seguimiento_partida_rubro.router)
+app.include_router(sp_seguimiento_partida_rubro_proveedor.router)
+app.include_router(sp_ente_seguimiento_captura.router)
+app.include_router(sp_ente_seguimiento_partida_captura.router)
+app.include_router(sp_ente_seguimiento_partida_rubro_captura.router)
+app.include_router(sp_ente_seguimiento_partida_rubro_proveedor_captura.router)
 # =======================================================
 # 🔍 Endpoint raíz para verificación
 # =======================================================
