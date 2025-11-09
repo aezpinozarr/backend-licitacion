@@ -16,6 +16,7 @@ from app.routers import (
     sp_cat_fundamiento, sp_enum_seguimiento_partida_rubro_estatus, sp_rector_seguimiento_gestion_proveedor_adjudicado,
     verificar_adjudicado, reporte_adjudicado, sp_rector_seg_partida_rubro_proveedor_adjudicado_deshacer,notificaciones,
     sp_ente_seguimiento, sp_rector_seguimiento_detalle_v1, sp_ente_seguimiento_partida, sp_ente_y_servidor_publico_gestionar_ambos,
+    sp_rector_seguimiento_gestion_estatus
 )
 
 from app.routers.procesos_editar import ( sp_seguimiento, sp_seguimiento_partida, sp_seguimiento_partida_rubro,
@@ -97,6 +98,8 @@ app.include_router(notificaciones.router)
 app.include_router(sp_ente_seguimiento.router)
 app.include_router(sp_rector_seguimiento_detalle_v1.router)
 app.include_router(sp_ente_y_servidor_publico_gestionar_ambos.router)
+app.include_router(sp_rector_seguimiento_gestion_estatus.router)
+
 # === 🔹 Otros catálogos y utilidades ===
 app.include_router(catalogos_ente.router)
 app.include_router(catalogos_servidor_publico.router)
@@ -112,6 +115,11 @@ app.include_router(procesos.router)
 app.include_router(proceso_detalle.router)
 app.include_router(sp_rector_seg_partida_rubro_proveedor_adjudicado_deshacer.router)
 app.include_router(sp_ente_seguimiento_partida.router)
+
+
+
+
+
 
 # ======================================================
 # EDITAR PROCESOS ---- > FORMULARIO 4 PASOS.

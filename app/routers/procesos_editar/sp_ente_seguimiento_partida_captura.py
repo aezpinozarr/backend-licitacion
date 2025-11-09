@@ -15,12 +15,18 @@ def update_ente_seguimiento_partida_captura(
     db: Session = Depends(get_db)
 ):
     """
-    Llama al SP procesos.sp_ente_seguimiento_partida_captura con acción 'EDITAR'
-    para insertar o actualizar una partida asociada a un seguimiento (Paso 2).
+    Llama al SP procesos.sp_ente_seguimiento_partida_captura_v2 con acción 'NUEVO' o 'EDITAR'
+    según corresponda, para insertar o actualizar una partida asociada a un seguimiento (Paso 2).
     """
     try:
+        # 📋 Log de lo que realmente llega al backend
+        print("📥 Payload recibido:", payload.dict())
+
+        # Determina si es una edición o una nueva inserción
+        accion = "EDITAR" if payload.p_id and payload.p_id > 0 else "NUEVO"
+
         sql = text("""
-            SELECT procesos.sp_ente_seguimiento_partida_captura(
+            SELECT procesos.sp_ente_seguimiento_partida_captura_v2(
                 :p_accion,
                 :p_id_seguimiento,
                 :p_id,
@@ -31,7 +37,7 @@ def update_ente_seguimiento_partida_captura(
         """)
 
         result = db.execute(sql, {
-            "p_accion": "EDITAR",
+            "p_accion": accion,
             "p_id_seguimiento": payload.p_id_seguimiento,
             "p_id": payload.p_id,
             "p_e_no_requisicion": payload.p_e_no_requisicion,
@@ -41,9 +47,11 @@ def update_ente_seguimiento_partida_captura(
 
         db.commit()
 
-        if not result:
-            raise HTTPException(status_code=400, detail="No se pudo actualizar o insertar la partida.")
+        if result is None or result == 0:
+            print(f"⚠️ SP devolvió {result}. No se realizó actualización/inserción.")
+            raise HTTPException(status_code=400, detail="No se realizaron cambios (puede que ya exista o el ID sea inválido).")
 
+        print(f"✅ Operación {accion} completada con ID resultado: {result}")
         return result
 
     except Exception as e:

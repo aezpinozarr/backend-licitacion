@@ -20,7 +20,7 @@ def gestionar_partida_ente(data: schemas.ProcesoPartidaEnteIn, db: Session = Dep
     """
     try:
         query = text("""
-            SELECT procesos.sp_ente_seguimiento_partida_captura(
+            SELECT procesos.sp_ente_seguimiento_partida_captura_v2(
                 :p_accion,
                 :p_id_seguimiento,
                 :p_id,
@@ -31,8 +31,8 @@ def gestionar_partida_ente(data: schemas.ProcesoPartidaEnteIn, db: Session = Dep
         """)
 
         params = {
-        "p_accion": data.p_accion,
-            "p_id_seguimiento": data.p_id_seguimiento,  # 👈 campo correcto según schemas.py
+            "p_accion": data.p_accion,
+            "p_id_seguimiento": data.p_id_seguimiento,
             "p_id": data.p_id,
             "p_e_no_requisicion": data.p_e_no_requisicion,
             "p_e_id_partida": data.p_e_id_partida,

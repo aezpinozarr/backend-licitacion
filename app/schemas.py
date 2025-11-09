@@ -460,10 +460,10 @@ class ProcesoPartidaEnteIn(BaseModel):
     p_accion: str
     p_id_seguimiento: int
     p_id: Optional[int] = None
-    p_e_no_requisicion: str
-    p_e_id_partida: str
-    p_e_id_fuente_financiamiento: str
-    # 🚫 Eliminado p_e_monto_presupuesto_suficiencia
+    p_e_no_requisicion: Optional[str] = None
+    p_e_id_partida: Optional[str] = None
+    p_e_id_fuente_financiamiento: Optional[str] = None
+
 
 
 # ===========================================================
@@ -614,9 +614,9 @@ class EnteSeguimientoUpdate(BaseModel):
 class EnteSeguimientoPartidaUpdate(BaseModel):
     p_id_seguimiento: int
     p_id: Optional[int] = None
-    p_e_no_requisicion: Optional[str] = ""
-    p_e_id_partida: Optional[str] = "0"
-    p_e_id_fuente_financiamiento: Optional[str] = "0"
+    p_e_no_requisicion: Optional[str] = None
+    p_e_id_partida: Optional[str] = None
+    p_e_id_fuente_financiamiento: Optional[str] = None
 
     class Config:
         from_attributes = True
