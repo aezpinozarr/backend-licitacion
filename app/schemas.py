@@ -652,3 +652,16 @@ class EnteSeguimientoPartidaRubroProveedorUpdate(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+# ======================================
+# 🔹 CREAR PROVEEDOR PASO 4: DIALOG 
+# ======================================
+
+class ProveedorDialogCreate(BaseModel):
+    p_rfc: str
+    p_razon_social: str
+    p_nombre_comercial: Optional[str] = None
+    p_persona_juridica: Optional[str] = None
+    p_correo_electronico: Optional[EmailStr] = None
+    p_id_entidad_federativa: Optional[int] = None
