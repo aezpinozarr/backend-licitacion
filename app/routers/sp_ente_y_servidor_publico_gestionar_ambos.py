@@ -26,7 +26,7 @@ def gestionar_ente_y_servidor_publico_ambos(
 
     try:
         query = text("""
-            SELECT catalogos.sp_ente_y_servidor_publico_gestionar_ambos(
+            SELECT catalogos.sp_ente_y_servidor_publico_gestionar_dialog(
                 :p_id_ente, :p_nombre, :p_cargo
             ) AS resultado;
         """)
