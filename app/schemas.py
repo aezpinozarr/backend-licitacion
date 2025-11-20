@@ -313,12 +313,10 @@ class RubroOut(BaseModel):
 
 
 class RubroCreate(BaseModel):
-    id: str
     descripcion: str
 
 
 class RubroUpdate(BaseModel):
-    id: str
     descripcion: str
 
 
