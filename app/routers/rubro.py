@@ -39,33 +39,28 @@ def get_rubros(
 # ===============================
 # Crear rubro
 # ===============================
-@router.post("", response_model=dict)
+@router.post("", response_model=int)
 def crear_rubro(data: schemas.RubroCreate, db: Session = Depends(get_db)):
     """
-    Crea un nuevo rubro usando la versión v2 del SP.
-    Genera ID automático y retorna el ID creado.
+    Crea un rubro usando sp_cat_rubro_gestionar.
+    El ID ES MANUAL – se recibe desde el frontend.
+    Retorna 1 si la inserción fue exitosa.
     """
     try:
         result = db.execute(
             text("""
-                SELECT * FROM catalogos.sp_cat_rubro_gestionar_v2(
+                SELECT catalogos.sp_cat_rubro_gestionar(
                     'NUEVO',
-                    NULL,
+                    CAST(:p_id AS varchar),
                     CAST(:p_descripcion AS varchar)
                 )
             """),
-            {"p_descripcion": data.descripcion}
-        ).mappings().first()
-
-        if result is None:
-            raise HTTPException(status_code=500, detail="Error al crear rubro")
+            {"p_id": data.id, "p_descripcion": data.descripcion}
+        ).scalar()
 
         db.commit()
 
-        return {
-            "resultado": result["resultado"],
-            "id_generado": result["nuevo_id"]
-        }
+        return result  # 1 o 0
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al crear rubro: {str(e)}")
