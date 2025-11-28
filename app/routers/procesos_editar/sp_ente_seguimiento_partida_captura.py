@@ -15,7 +15,7 @@ def update_ente_seguimiento_partida_captura(
     db: Session = Depends(get_db)
 ):
     """
-    Llama al SP procesos.sp_ente_seguimiento_partida_captura_v2 con acción 'NUEVO' o 'EDITAR'
+    Llama al SP procesos.sp_ente_seguimiento_partida_captura con acción 'NUEVO' o 'EDITAR'
     según corresponda, para insertar o actualizar una partida asociada a un seguimiento (Paso 2).
     """
     try:
@@ -26,7 +26,7 @@ def update_ente_seguimiento_partida_captura(
         accion = "EDITAR" if payload.p_id and payload.p_id > 0 else "NUEVO"
 
         sql = text("""
-            SELECT procesos.sp_ente_seguimiento_partida_captura_v2(
+            SELECT procesos.sp_ente_seguimiento_partida_captura(
                 :p_accion,
                 :p_id_seguimiento,
                 :p_id,

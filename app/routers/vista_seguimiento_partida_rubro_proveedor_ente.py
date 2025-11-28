@@ -22,11 +22,30 @@ def obtener_todos(db: Session = Depends(get_db)):
             SELECT *
             FROM procesos.v_seguimiento_y_partida_y_rubro_y_proveedor
         """)
-        result = db.execute(query).mappings().all()
-        return {"resultado": result}
+        rows = db.execute(query).mappings().all()
+
+        resultado = []
+
+        for row in rows:
+            data = dict(row)
+
+            # ID esperado por el frontend
+            data["id_proceso_seguimiento"] = data.get("id")
+
+            # ⭐ Estatus REAL del seguimiento (PREREGISTRADO, REVISADO, CANCELADO)
+            data["seguimiento_estatus"] = data.get("estatus")
+
+            # ⭐ Estatus REAL del rubro (PREINGRESO, DIFERIMIENTO, ADJUDICADO, CANCELADO)
+            data["rubro_estatus"] = data.get("rubro_estatus")
+
+            resultado.append(data)
+
+        return {"resultado": resultado}
+
     except Exception as e:
         print("❌ Error al obtener todos:", e)
         raise HTTPException(status_code=500, detail=str(e))
+
 
 # ===========================================================
 # 🔹 Obtener registros por ente
@@ -41,12 +60,20 @@ def obtener_por_ente(p_id_ente: str, db: Session = Depends(get_db)):
         """)
         rows = db.execute(query, {"p_id_ente": str(p_id_ente)}).mappings().all()
 
-        # Renombrar campos para que coincidan con el frontend
         resultado = []
+
         for row in rows:
             data = dict(row)
+
+            # ID esperado por el frontend
             data["id_proceso_seguimiento"] = data.get("id")
-            data["estatus"] = data.get("r_estatus")
+
+            # ⭐ Estatus del seguimiento
+            data["seguimiento_estatus"] = data.get("estatus")
+
+            # ⭐ Estatus del rubro
+            data["rubro_estatus"] = data.get("rubro_estatus")
+
             resultado.append(data)
 
         return {"resultado": resultado}

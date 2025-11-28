@@ -20,7 +20,7 @@ def gestionar_partida_ente(data: schemas.ProcesoPartidaEnteIn, db: Session = Dep
     """
     try:
         query = text("""
-            SELECT procesos.sp_ente_seguimiento_partida_captura_v2(
+            SELECT procesos.sp_ente_seguimiento_partida_captura(
                 :p_accion,
                 :p_id_seguimiento,
                 :p_id,
