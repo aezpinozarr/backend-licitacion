@@ -442,6 +442,7 @@ class ProcesoSeguimientoEnteIn(BaseModel):
     p_e_oficio_invitacion: str
     p_e_id_servidor_publico_emite: int
     p_e_servidor_publico_cargo: str
+    p_e_tipo_evento: str
     p_e_tipo_licitacion: str
     p_e_tipo_licitacion_no_veces: int
     p_e_tipo_licitacion_notas: Optional[str] = ""
@@ -595,6 +596,7 @@ class EnteSeguimientoUpdate(BaseModel):
     p_e_oficio_invitacion: Optional[str] = ""
     p_e_id_servidor_publico_emite: Optional[int] = 0
     p_e_servidor_publico_cargo: Optional[str] = ""
+    p_e_tipo_evento: Optional[str] = "" 
     p_e_tipo_licitacion: Optional[str] = ""
     p_e_tipo_licitacion_no_veces: Optional[int] = 0
     p_e_tipo_licitacion_notas: Optional[str] = ""
