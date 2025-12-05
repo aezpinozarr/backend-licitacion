@@ -10,26 +10,29 @@ router = APIRouter(
 )
 
 @router.post("/", response_model=DeshacerAdjudicacionResponse)
-def deshacer_adjudicacion(
-    payload: DeshacerAdjudicacionRequest,
-    db: Session = Depends(get_db),
-):
-    """
-    Llama al SP procesos.sp_rector_seg_partida_rubro_proveedor_adjudicado_deshacer(p_id)
-    para revertir una adjudicación de proveedor.
-    Retorna 1 si se deshizo correctamente, 0 si no se quitó nada.
-    """
+def deshacer_adjudicacion(payload: DeshacerAdjudicacionRequest, db: Session = Depends(get_db)):
+
     try:
-        query = text("SELECT * FROM procesos.sp_rector_seg_partida_rubro_proveedor_adjudicado_deshacer(:p_id)")
-        result = db.execute(query, {"p_id": payload.p_id}).mappings().all()
+        query = text("""
+            SELECT * 
+            FROM procesos.sp_rector_seg_partida_rubro_proveedor_adjudicado_deshacer(
+                :p_id_seguimiento_partida_rubro,
+                :p_id_proveedor
+            )
+        """)
+
+        result = db.execute(query, {
+            "p_id_seguimiento_partida_rubro": payload.p_id_seguimiento_partida_rubro,
+            "p_id_proveedor": payload.p_id_proveedor
+        }).mappings().all()
+
         db.commit()
 
-        # Si el SP devolvió registros, consideramos éxito (1)
         if result and len(result) > 0:
             return DeshacerAdjudicacionResponse(resultado=1)
         else:
             return DeshacerAdjudicacionResponse(resultado=0)
 
     except Exception as e:
-        print("❌ Error en sp_rector_seg_partida_rubro_proveedor_adjudicado_deshacer:", str(e))
+        print("❌ Error en deshacer adjudicacion:", str(e))
         raise HTTPException(status_code=500, detail=str(e))

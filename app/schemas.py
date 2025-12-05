@@ -556,12 +556,11 @@ class SpRectorSeguimientoGestionProveedorAdjudicado(BaseModel):
 # ============================
 
 class DeshacerAdjudicacionRequest(BaseModel):
-    p_id: int
-
+    p_id_seguimiento_partida_rubro: int
+    p_id_proveedor: int
 
 class DeshacerAdjudicacionResponse(BaseModel):
     resultado: int
-
 
 # ======================================
 # CAMBIAR CONTRASEÑA USUARIO AUTENTICADO  
