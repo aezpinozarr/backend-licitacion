@@ -665,3 +665,36 @@ class ProveedorDialogCreate(BaseModel):
     p_persona_juridica: Optional[str] = None
     p_correo_electronico: Optional[EmailStr] = None
     p_id_entidad_federativa: Optional[int] = None
+
+
+
+# ======================================
+# NUEVAS SESIONES --- > CALENDARIO
+# ======================================
+
+class CalendarioGestionarIn(BaseModel):
+    p_accion: str                  # NUEVO, EDITAR, ELIMINAR
+    p_id: Optional[int] = None
+    p_acuerdo_o_numero_licitacion: Optional[str] = ""
+    p_id_ente: Optional[int] = 0
+    p_id_servidor_publico: Optional[int] = 0
+    p_servidor_publico_cargo: Optional[str] = ""
+    p_tipo_licitacion: Optional[str] = ""
+    p_tipo_licitacion_no_veces: Optional[int] = 0
+    p_tipo_evento: Optional[str] = ""
+    p_id_usuario_registra: Optional[int] = 0
+
+
+class CalendarioFuenteIn(BaseModel):
+    p_accion: str                  # NUEVO | ELIMINAR
+    p_id_calendario: int
+    p_id_fuente_financiamiento: str
+    p_id_usuario_registra: Optional[int] = 0
+
+
+class CalendarioFechaIn(BaseModel):
+    p_accion: str                    # NUEVO | ELIMINAR
+    p_id_calendario: int
+    p_fecha: date
+    p_hora: Optional[datetime] = None
+    p_id_usuario_registra: Optional[int] = 0

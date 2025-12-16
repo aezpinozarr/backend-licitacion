@@ -23,6 +23,8 @@ from app.routers.procesos_editar import ( sp_seguimiento, sp_seguimiento_partida
 sp_seguimiento_partida_rubro_proveedor, sp_ente_seguimiento_captura, sp_ente_seguimiento_partida_captura, 
 sp_ente_seguimiento_partida_rubro_captura, sp_ente_seguimiento_partida_rubro_proveedor_captura)
 
+from app.routers.nuevo_calendario import (sp_calendario_gestionar, sp_calendario_fuentes_financiamiento_gestionar, sp_calendario_fechas_gestionar, sp_calendario, sp_calendario_fuentes_financiamiento, sp_calendario_fechas)
+
 # =======================================================
 # 🚀 Configuración principal
 # =======================================================
@@ -118,10 +120,6 @@ app.include_router(sp_rector_seg_partida_rubro_proveedor_adjudicado_deshacer.rou
 app.include_router(sp_ente_seguimiento_partida.router)
 
 
-
-
-
-
 # ======================================================
 # EDITAR PROCESOS ---- > FORMULARIO 4 PASOS.
 # ======================================================
@@ -133,6 +131,21 @@ app.include_router(sp_ente_seguimiento_captura.router)
 app.include_router(sp_ente_seguimiento_partida_captura.router)
 app.include_router(sp_ente_seguimiento_partida_rubro_captura.router)
 app.include_router(sp_ente_seguimiento_partida_rubro_proveedor_captura.router)
+
+
+# ======================================================
+# NUEVO CALENDARIO ---- > NUEVAS SESIONES
+# ======================================================
+app.include_router(sp_calendario_gestionar.router)
+app.include_router(sp_calendario_fuentes_financiamiento_gestionar.router)
+app.include_router(sp_calendario_fechas_gestionar.router)
+
+# ======================================================
+# NUEVO CALENDARIO ---- > CONSULTA DE SESIONES
+# ======================================================
+app.include_router(sp_calendario.router)
+app.include_router(sp_calendario_fuentes_financiamiento.router)
+app.include_router(sp_calendario_fechas.router)
 # =======================================================
 # 🔍 Endpoint raíz para verificación
 # =======================================================
