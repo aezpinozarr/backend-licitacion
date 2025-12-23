@@ -19,11 +19,25 @@ from app.routers import (
     sp_rector_seguimiento_gestion_estatus, sp_cat_proveedor_gestionar_dialog
 )
 
+# =======================================================
+# Endpoints de editar procesos
+# =======================================================
 from app.routers.procesos_editar import ( sp_seguimiento, sp_seguimiento_partida, sp_seguimiento_partida_rubro,
 sp_seguimiento_partida_rubro_proveedor, sp_ente_seguimiento_captura, sp_ente_seguimiento_partida_captura, 
 sp_ente_seguimiento_partida_rubro_captura, sp_ente_seguimiento_partida_rubro_proveedor_captura)
 
+# =======================================================
+# Endpoints de nuevo calendario
+# =======================================================
+
 from app.routers.nuevo_calendario import (sp_calendario_gestionar, sp_calendario_fuentes_financiamiento_gestionar, sp_calendario_fechas_gestionar, sp_calendario, sp_calendario_fuentes_financiamiento, sp_calendario_fechas)
+
+
+# =======================================================
+# Endpoints de licitación pública
+# =======================================================
+
+from app.routers.licitacion_publica import (sp_calendario_acto_gestionar, sp_calendario_acto_popular)
 
 # =======================================================
 # 🚀 Configuración principal
@@ -146,6 +160,16 @@ app.include_router(sp_calendario_fechas_gestionar.router)
 app.include_router(sp_calendario.router)
 app.include_router(sp_calendario_fuentes_financiamiento.router)
 app.include_router(sp_calendario_fechas.router)
+
+
+# ===========================================================
+# LICITACIÓN PÚBLICA ------ > ENDPOINTS DE CREAR Y CONSULTAR
+# ===========================================================
+
+app.include_router(sp_calendario_acto_gestionar.router)
+app.include_router(sp_calendario_acto_popular.router)
+
+
 # =======================================================
 # 🔍 Endpoint raíz para verificación
 # =======================================================

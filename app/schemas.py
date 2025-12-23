@@ -698,3 +698,20 @@ class CalendarioFechaIn(BaseModel):
     p_fecha: date
     p_hora: Optional[datetime] = None
     p_id_usuario_registra: Optional[int] = 0
+
+
+
+# =================================================
+# CREAR LICITACIÓN PÚBLICA --- > LICITACIÓN PÚBLICA
+# =================================================
+
+class CalendarioActoGestionarIn(BaseModel):
+    p_accion: str                                    
+    p_id_calendario: int                             
+    p_id_listado_entregables: int                    
+    p_fecha: str                                  
+    p_hora: str                                       
+    p_id_usuario_registra: Optional[int] = 0
+
+    class Config:
+        from_attributes = True
